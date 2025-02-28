@@ -1,0 +1,28 @@
+.home{
+    top:72px;
+    z-index: 1;
+}
+
+.home::-webkit-scrollbar{
+    background-color: rgb(40, 34, 83);
+    width: 7px;
+}
+
+.home::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: #51479c;
+}
+
+.card{
+    backdrop-filter: blur(50%);
+    z-index: 2;
+    box-shadow: 5px 3px 5px 1px rgba(0,0,0,0.34);
+    -webkit-box-shadow: 5px 3px 5px 1px rgba(0,0,0,0.34);
+    -moz-box-shadow: 5px 3px 5px 1px rgba(0,0,0,0.34);
+}
+
+.card:hover{
+    transform: translateY(-5px);
+    background-color: #191e36;
+    transition: all .5s;
+}

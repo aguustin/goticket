@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap');
+
+.resing{
+    z-index: 3;
+    background-color: transparent;
+}
+
+.back-color-div-forms{
+    background-color: black;
+    opacity: .6;
+}
+
+.forms{
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
