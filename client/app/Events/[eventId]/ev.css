@@ -1,0 +1,14 @@
+.purchase-categories{
+    height: 220px;
+    width: 290px;
+    overflow-y: auto;
+}
+
+.purchase-categories::-webkit-scrollbar{
+    width: 5px;
+    background-color: transparent;
+}
+
+.purchase-categories::-webkit-scrollbar-thumb{
+    background-color: rgb(170, 170, 170);
+}

@@ -1,32 +1,68 @@
+import mongoose from "mongoose";
 import cloudinary from "../lib/cloudinary.js";
 import eventsModel from "../models/eventsModel.js"
+import usersModel from "../models/usersModel.js";
 
 export const createEventController = async (req, res) => {
-    const { organizationId, eventName, eventAdress, eventCategory, tickets } = req.body;
-
+    const { eventId, organizationId, eventName, eventAdress, eventCategory, eventDescription, price, category, quantity, visible } = req.body;
+    console.log(req.body)
+    console.log(req.file)
     if (req.file) {
         try {
-            // Using await to properly wait for Cloudinary upload
-            const result = await cloudinary.uploader.upload(req.file.path, {
-                resource_type: 'auto',
-                folder: 'goticket'
-            });
-
-            // Create the event
-            const createEvent = await eventsModel.create({
-                eventImg: result.secure_url,
-                organizationId,
-                eventName,
-                eventAdress,
-                eventCategory,
-                eventDescription,
-                eventDate: Date.now(),
-                ticket: [{
-                    ...tickets
-                }]
-            });
-
-            res.status(200).json(createEvent); // Sending the created event back
+            if(eventId){  //arreglar esta mierda de aca
+                console.log('entro aca?')
+                const passEveToId = new mongoose.Types.ObjectId(organizationId)
+                console.log(passEveToId)
+                await eventsModel.updateOne(
+                    {_id: eventId},
+                    {
+                        $addToSet:{
+                            ticket:[{
+                                price: price,
+                                category: category,
+                                quantity: quantity,
+                                visible: visible
+                            }]
+                        }
+                    }
+                )
+                res.status(200).json(2)
+            }else{
+                    // Using await to properly wait for Cloudinary upload
+                    const result = await cloudinary.uploader.upload(req.file.path, {
+                        resource_type: 'auto',
+                        folder: 'goticket'
+                    });
+                    
+                    // ACORDATE DE HACER LA GENERACION DEL QR Y METERLA EN EL MODELO DIOOOS
+                    const newEvent = await eventsModel.create({	
+                        organizationId: organizationId,
+                        eventImg: result.secure_url,
+                        eventName: eventName,
+                        eventAdress: eventAdress,
+                        eventCategory: eventCategory,
+                        eventDescription: eventDescription,
+                        eventDate: Date.now(),
+                        ticket: [{
+                            price:price,
+                            category:category,
+                            quantity:quantity,
+                            visible:visible
+                        }]
+                    });
+                    const passOrgToId = new mongoose.Types.ObjectId(organizationId)
+                    await usersModel.updateOne(
+                        {_id: organizationId},
+                        {
+                            $addToSet:{
+                                createdEvents:[{
+                                    eventId: newEvent._id
+                                }]
+                            }
+                        }
+                    )
+                    res.status(200).json(newEvent); // Sending the created event back
+            }
         } catch (error) {
             console.log(error); // Log any errors
             res.sendStatus(500); // Server error response

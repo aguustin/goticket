@@ -13,7 +13,7 @@ const eventSchema = mongoose.Schema({
 		price:{type:String},
 		category:{type:String},
 		quantity:{type:Number},
-		visible:{type:Number}
+		visible:{type:String}
 	}],
 	review:[{
 		userImg:{type:String},

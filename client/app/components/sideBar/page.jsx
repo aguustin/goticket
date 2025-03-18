@@ -60,10 +60,10 @@ const SideBar = () => {
                         <img className='ml-2' src={favoritePng.src} alt=""></img>
                         <p className='ml-3'>Favoritos</p>
                     </button>
-                    {userInfo.rol > 0 && <button className='flex items-center text-center pt-6 pb-6 border-b-2 w-full'>
+                    {/*userInfo.rol > 0 && */<Link href="/Producer" className='flex items-center text-center pt-6 pb-6 border-b-2 w-full'>
                         <img className='ml-2' src={addPng.src} alt=""></img>
                         <p className='ml-3'>Crear evento</p>
-                    </button>}
+                    </Link>}
                 </div>
                 <button className='logout-button w-full absolute bottom-0 justify-between flex items-center text-center pt-6 pb-6 pr-10 bg-slate-800'>
                     <img className='ml-3' src={logoutPng.src} alt=""></img>

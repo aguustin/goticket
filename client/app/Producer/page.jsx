@@ -1,0 +1,127 @@
+'use client'
+import { useState } from 'react';
+import './producer.css'
+import imageUploadPng from '@/app/assets/imageUpload.png';
+import addTicketPng from '@/app/assets/addTicket.png'
+import { createEventRequest } from '../api/eventApi';
+
+const Producer = () => {
+
+    const [nuevoTicket, setNuevoTicker] = useState(1)
+    const [price, setPrice] = useState(0)
+    const [category, setCategory] = useState('')
+    const [quantity, setQuantity] = useState(0)
+    const [isCreated, setIsCreated] = useState(0)
+    const [visible, setVisible] = useState()
+
+    const newTicketFunc = async (e) => {
+        e.preventDefault()
+     
+        if(price <= 0 || category.length <= 0 || quantity <= 0){
+            console.log('poner mensaje de que tiene que rellenar los campos')
+            return 0
+        }
+        const eventData = new FormData()
+
+        
+            eventData.append('eventId', isCreated._id)
+            eventData.append('OrganizationId', '67bf1b493b9c5934eeaf1ff6')
+            eventData.append('eventImg', e.target.elements.eventImg.files[0])
+            eventData.append('eventName', e.target.elements.eventName.value)
+            eventData.append('eventAdress', e.target.elements.eventAdress.value)
+            eventData.append('eventDescription', e.target.elements.eventDescription.value)
+            eventData.append('eventDate', e.target.elements.eventDate.value)
+            eventData.append('price', price)
+            eventData.append('category', category)
+            eventData.append('quantity', quantity)
+            eventData.append('visible', visible)
+        
+        setPrice(0)
+        setCategory('')
+        setQuantity(0)
+        setVisible()
+
+        const res = await createEventRequest(eventData)
+
+        console.log(res.data);
+        if(res.data === 2){
+            console.log('updateado')
+        }else{
+            setIsCreated(res.data)
+        }
+        setNuevoTicker(nuevoTicket + 1)
+    }
+
+    return(
+        <>
+        <div className="bg-slate-900 p-9 w-screen">
+            <form encType="multipart/form-data" className="mx-auto mt-16 w-[900px]" onSubmit={(e) => newTicketFunc(e)}>
+            <div className="flex justify-between">
+                <div>
+                    <label htmlFor="upload-file-event" className="custom-file-upload bg-slate-950"><img className='mx-auto' src={imageUploadPng.src}></img></label><br></br>
+                    <input id="upload-file-event" type="file" name="eventImg" />
+                </div>
+                <div>
+                    <div>
+                        <label className="text-xl">Nombre del evento:</label><br></br>
+                        <input className="rounded-lg bg-slate-950 p-1 w-[450px]" type="text" name="eventName"></input>
+                    </div><br></br>
+                    <div>
+                        <label className="text-xl">Direccion:</label><br></br>
+                        <input className="rounded-lg bg-slate-950 p-1 w-[450px]" type="text" name="eventAdress"></input>
+                    </div><br></br>
+                    <div>
+                        <label className="text-xl">Descripcion (opcional):</label><br></br>
+                        <input className="rounded-lg bg-slate-950 p-1 w-[450px]" type="text" name="eventDescription"></input>
+                    </div><br></br>
+                    <div>
+                        <label className="text-xl">Fecha:</label><br></br>
+                        <input className="rounded-lg bg-slate-950 p-1" type="date" name="eventDate"></input>
+                    </div><br></br>
+                        {/*<button onClick={(e) => newTicketFunc(e)} className='mt-3 flex items-center'><img src={addTicketPng.src} alt=""></img><p className='ml-3 text-xl'>crear ticket</p></button>*/ }
+                        <div className='tickets h-[300px]'>
+                            {[...Array(nuevoTicket)].map((_, index) => (
+                                <div className='mt-9' key={index}>
+                                    <div className='relative'>
+                                        <p className='text-yellow-500'>Ticket #{index + 1}</p>
+                                        <div className='mt-2'>
+                                            <label>Precio:</label>
+                                            <input className='rounded-lg bg-slate-950 p-1 w-[150px]' type="number" onChange={(e) => setPrice(e.target.value)}></input>
+                                        </div>
+                                        <div className='mt-2'>
+                                            <label>Categoria:</label>
+                                            <input className='rounded-lg ml-6 bg-slate-950 p-1 w-[150px]' type="text" name="category" onChange={(e) => setCategory(e.target.value)}></input>
+                                        </div>
+                                        <div className='mt-2'>
+                                            <label>Cantidad:</label>
+                                            <input className='rounded-lg ml-1 bg-slate-950 p-1 w-[150px]' type="number" onChange={(e) => setQuantity(e.target.value)}></input>
+                                        </div>
+                                        <div className='flex items-center mt-2'>
+                                            <label>Visible:</label>
+                                            <input className='rounded-lg bg-slate-950 w-[30px]' type="checkbox" onChange={(e) => setVisible(e.target.value)}></input>
+                                        </div>
+                                        <button className='absolute right-10 bottom-0 bg-yellow-500 text-black p-1 text-xl rounded-lg' type="submit">Confirmar</button>
+                                    </div>
+                                </div>
+                            ))}                 
+                        </div>
+                </div>
+            </div>
+            </form>
+        </div>
+        </>
+    )
+}
+/*  eventName:{type:String},
+    eventAdress:{type:String},
+    eventCategory:{type:Number},
+	eventDescription:{type:String},
+	eventDate:{type:String},
+    qrGeneration:{type:String},
+	ticket:[{
+		price:{type:String},
+		category:{type:String},
+		quantity:{type:Number},
+		visible:{type:Number}
+	}],*/
+export default Producer;

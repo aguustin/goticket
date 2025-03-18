@@ -1,0 +1,20 @@
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload{
+    border-radius: 50px;
+    display: inline-block;
+    height: 400px;
+    width: 400px;
+    cursor: pointer;
+}
+.tickets{
+    overflow-y: auto;
+}
+.tickets::-webkit-scrollbar{
+    width: 5px;
+    background-color: transparent;
+}
+.tickets::-webkit-scrollbar-thumb{
+    background-color: rgb(170, 170, 170);
+}
