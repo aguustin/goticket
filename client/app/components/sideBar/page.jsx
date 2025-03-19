@@ -12,7 +12,7 @@ import downArrowPng from '@/app/assets/down-arrow.png'
 import Image from 'next/image'
 import { useContext, useState } from 'react'
 import Link from 'next/link'
-import UserContext from '@/app/context/userContext'
+import UserContext from '@/app/context/appContext'
 
 const SideBar = () => {
 
@@ -27,10 +27,10 @@ const SideBar = () => {
                     <button className='absolute right-3'><img src={leftPng.src} alt=""></img></button>
                 </div>
                 <div className='mr-3'>
-                    <button className='flex items-center pt-6 pb-6 border-b-2 w-full'>
+                    <Link href="/Events" className='flex items-center pt-6 pb-6 border-b-2 w-full'>
                         <img className='ml-2' src={searchPng.src} alt=""></img>
                         <p className='ml-3'>Buscar eventos</p>
-                    </button>
+                    </Link>
                     <Link href="/Events" className='flex items-center text-center pt-6 pb-6 border-b-2 w-full'>
                         <img className='ml-2' src={myEventsPng.src} alt=""></img>
                         <p className='ml-3'>Mis eventos</p>

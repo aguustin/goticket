@@ -1,7 +1,7 @@
 "use client"
 import '@/app/Home/home.css'
 import { useContext } from 'react'
-import UserContext from '@/app/context/userContext'
+import UserContext from '@/app/context/appContext'
 import ticketPng from '@/app/assets/ticket.png'
 import Link from 'next/link'
 

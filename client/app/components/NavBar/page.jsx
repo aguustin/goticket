@@ -3,7 +3,7 @@ import '@/app/components/NavBar/navbar.css'
 import certificatePng from '@/app/assets/certificate.png'
 import ResIng from '../ResIng/page'
 import { useContext } from 'react'
-import UserContext from '@/app/context/userContext'
+import UserContext from '@/app/context/appContext'
 
 const NavBar = () => {
     const { userInfo, showResIng, setShowResIng,  setSignInForm} = useContext(UserContext)

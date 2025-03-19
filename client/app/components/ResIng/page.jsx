@@ -4,7 +4,7 @@ import { useContext, useState } from "react"
 import googlePng from '@/app/assets/google.png'
 import applePng from '@/app/assets/apple.png'
 import closePng from '@/app/assets/close.png'
-import UserContext from '@/app/context/userContext'
+import UserContext from '@/app/context/appContext'
 import { loginRequest, signUpRequest } from '@/app/api/userApi'
 import { redirect } from 'next/navigation'
 

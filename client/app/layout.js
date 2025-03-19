@@ -3,7 +3,7 @@ import "./globals.css";
 import Footer from "./components/Footer/page";
 import NavBar from "./components/NavBar/page";
 import SideBar from "./components/sideBar/page";
-import { UserContextProvider } from "./context/userContext";
+import { AppContextProvider } from "./context/appContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,14 +26,14 @@ export default function RootLayout({ children }) {
       <body
         className={`h-screen overflow-hidden ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <UserContextProvider>
+        <AppContextProvider>
           <NavBar/>
           <div className="flex">
             <SideBar/>
             {children}
           </div>
           <Footer/>
-        </UserContextProvider>
+        </AppContextProvider>
       </body>
     </html>
   );

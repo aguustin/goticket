@@ -9,7 +9,7 @@ export const createEventController = async (req, res) => {
     console.log(req.file)
     if (req.file) {
         try {
-            if(eventId){  //arreglar esta mierda de aca
+            if(eventId && mongoose.Types.ObjectId.isValid(eventId)){  
                 console.log('entro aca?')
                 const passEveToId = new mongoose.Types.ObjectId(organizationId)
                 console.log(passEveToId)
@@ -21,6 +21,8 @@ export const createEventController = async (req, res) => {
                                 price: price,
                                 category: category,
                                 quantity: quantity,
+                                waiting:0,
+		                        sells:0,
                                 visible: visible
                             }]
                         }
@@ -30,6 +32,9 @@ export const createEventController = async (req, res) => {
             }else{
                     // Using await to properly wait for Cloudinary upload
                     const result = await cloudinary.uploader.upload(req.file.path, {
+                        transformation: [
+                            { width: 350, height: 350, crop: "scale" }
+                        ],
                         resource_type: 'auto',
                         folder: 'goticket'
                     });
@@ -43,14 +48,16 @@ export const createEventController = async (req, res) => {
                         eventCategory: eventCategory,
                         eventDescription: eventDescription,
                         eventDate: Date.now(),
+                        assists: 0,
                         ticket: [{
                             price:price,
                             category:category,
                             quantity:quantity,
+                            waiting:0,
+		                    sells:0,
                             visible:visible
                         }]
                     });
-                    const passOrgToId = new mongoose.Types.ObjectId(organizationId)
                     await usersModel.updateOne(
                         {_id: organizationId},
                         {
@@ -79,8 +86,8 @@ export const getAllEventsController = async (req, res) => {
 }
 
 export const getEventById = async (req, res) => {
-    const {eventId} = req.body
-
+    const {eventId} = req.params
+    console.log('parametro', eventId)
     const getEvent = await eventsModel.find({_id: eventId})
     res.send(getEvent)
 }

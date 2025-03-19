@@ -8,7 +8,7 @@ route.post('/createEvent', upload.single('eventImg'), createEventController)
 
 route.get('/allEvents', getAllEventsController)
 
-route.post('/getEventById', getEventById)
+route.get('/getEventById/:eventId', getEventById)
 
 route.post('/getEventByCategory', getEventByCategoryController)
 
