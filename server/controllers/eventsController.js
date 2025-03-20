@@ -22,7 +22,7 @@ export const createEventController = async (req, res) => {
                                 category: category,
                                 quantity: quantity,
                                 waiting:0,
-		                        sells:0,
+		                        sellsByCat:0,
                                 visible: visible
                             }]
                         }
@@ -48,7 +48,8 @@ export const createEventController = async (req, res) => {
                         eventCategory: eventCategory,
                         eventDescription: eventDescription,
                         eventDate: Date.now(),
-                        assists: 0,
+                        sells: 0,
+                        profits: 0,
                         ticket: [{
                             price:price,
                             category:category,

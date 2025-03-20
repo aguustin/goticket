@@ -69,34 +69,98 @@ export const getMyFavoritesController = async (req, res) => {
 
 }
 
-export const buyEventController = async (req, res) => {
-    const { userId, eventBuyedId, eventDate, buyedEventImg, buyedEventName, buyedEventAdress, status, buyedDescription, qrData } = req.body
+export const buyTicketController = async (req, res) => {
+    const { userId, eventBuyedId,  status, tickets, cost, totalSelled, extractBuyedInfo } = req.body
+
+    //console.log(req.body)
 
     const getUser = await users.find({_id: userId})
-    if(getUser.length > 0){
+
+    /*if(getUser.length > 0){
         const eventIsOnList = await getUser[0].buys.some(buy => buy.eventBuyedId === eventBuyedId)
         if(eventIsOnList){
             res.status(200).json(2)
-        }else{
+        }else{*/
+
+        console.log(extractBuyedInfo)
+        if(getUser.length > 0){
             await users.updateOne(
                 {_id: userId},
                 {
                     $addToSet:{
                         buys:[{
                             eventBuyedId: eventBuyedId, 
-                            eventDate: Date.now(), 
-                            buyedEventImg: buyedEventImg, 
-                            buyedEventName: buyedEventName, 
-                            buyedEventAdress: buyedEventAdress, 
+                            //eventDate: Date.now(), 
+                            //buyedEventImg: buyedEventImg, 
+                            //buyedEventName: buyedEventName, 
+                            //buyedEventAdress: buyedEventAdress,
                             status: status, 
-                            buyedDescription: buyedDescription,
-                            qrData: qrData
+                            tickets:extractBuyedInfo,
+                            cost: cost,
+                            qrData: 'en espera'//qrData
                         }]
                     }
                 }
             )
+            await eventsModel.updateOne(
+                {_id:eventBuyedId},
+                {
+                    $inc:{
+                        sells:totalSelled,
+                        profits:cost,
+                    }
+                }
+            )
+            await eventsModel.aggregate([
+                 // Unwind buys array to work with each event buy
+                { $unwind: "$buys" },
+
+                // Unwind tickets array to work with individual tickets
+                { $unwind: "$buys.tickets" },
+
+                // Group by parent document _id and ticket category, summing the "waiting" field
+                {
+                    $group: {
+                    _id: { documentId: "$eventBuyedId", category: "$buys.tickets.category" },  // Group by parent document _id and ticket category
+                    totalWaiting: { $sum: "$buys.tickets.waiting" },  // Sum the waiting values
+                    totalQuantity: { $first: "$buys.tickets.quantity" }  // Get the quantity for the category (we use $first since quantity is the same for all tickets in that category)
+                    }
+                },
+
+                // Subtract waiting tickets from total quantity
+                {
+                    $project: {
+                    documentId: "$eventBuyedId.documentId",  // Include the parent document _id
+                    category: "$eventBuyedId.category",      // Include the ticket category
+                    remainingTickets: { 
+                        $subtract: ["$totalQuantity", "$totalWaiting"]  // Subtract waiting tickets from the total quantity
+                    },
+                    _id: 0                         // Remove the internal _id field
+                    }
+                },
+
+                // Sort by document _id and category if needed
+                { $sort: { documentId: 1, category: 1 } }
+            ])
+
+            await eventsModel.updateMany(
+                {
+                  "buys.eventBuyedId": { $in: eventBuyedId}
+                },
+                {
+                  $set: {
+                    "buys.$[eventBuyedId].tickets.$[].waiting": 0
+                  }
+                },
+                {
+                  arrayFilters: [
+                    { "ticket.waiting": { $gte: 0 } }
+                  ]
+                }
+              );
             res.status(200).json(1)
+        }else{
+            res.status(300).json('El usuario no existe')
         }
-    }
-    res.status(300).json('El usuario no existe')
+    //}
 }

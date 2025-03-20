@@ -9,12 +9,13 @@ const userSchema = mongoose.Schema({
     rol:{type:Number},
     buys:[{
         eventBuyedId:{type: String},
-        eventDate:{type:String},
+       /* eventDate:{type:String},
         buyedEventImg:{type:String},
         buyedEventName:{type:String},
-        buyedEventAdress:{type:String},
+        buyedEventAdress:{type:String},*/
         status:{type:Number},
-        buyedDescription:{type:String},
+        tickets:{type:Array},
+        cost:{type:Number},
         qrData:{type:String},
     }],
     favorites:[{
@@ -26,28 +27,6 @@ const userSchema = mongoose.Schema({
     createdEvents:[{
         eventId: {type:String}
     }]
-
-    /*organizationId: {type:String},
-    eventImg:{type:String},
-    eventName:{type:String},
-    eventAdress:{type:String},
-    eventCategory:{type:Number},
-	eventDescription:{type:String},
-	eventDate:{type:String},
-    qrGeneration:{type:String},
-	ticket:[{
-		price:{type:String},
-		category:{type:String},
-		quantity:{type:Number},
-		visible:{type:Number}
-	}],
-	review:[{
-		userImg:{type:String},
-		name:{type:String},
-		lastname:{type:String},
-		note:{type:Number},
-		reviewDescription:{type:String}
-	}]*/
 })
 
 export default mongoose.model('user', userSchema)

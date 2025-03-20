@@ -9,12 +9,14 @@ const eventSchema = mongoose.Schema({
 	eventDescription:{type:String},
 	eventDate:{type:String},
     qrGeneration:{type:String},
-	assists:{type:String},
+	sells:{type:Number},
+	profits:{type:Number},
 	ticket:[{
 		price:{type:String},
 		category:{type:String},
 		quantity:{type:Number},
-		sells:{type:Number},
+		waiting:{type:Number},
+		sellsByCat:{type:Number},
 		visible:{type:String}
 	}],
 	review:[{

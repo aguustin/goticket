@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react'
 import './ev.css'
 import pruebaJpg from "@/app/assets/prueba.jpg"
 import { getSelectedEventRequest } from '@/app/api/eventApi'
+import { buyTicketRequest } from '@/app/api/userApi'
 
 const Ev = () => {
     const params = useParams()
     const [eventSelected, setEventSelected] = useState([])
-    const [quantity, setQuantity] = useState(0)
+    const [totalSelled, setTotalSelled] = useState(0)
+    const [total, setTotal] = useState(0)
+    const [buyedDesc, setBuyedDesc] = useState([])
 
     useEffect(() => {
         const getEvent = async () => {
@@ -20,7 +23,7 @@ const Ev = () => {
     
     console.log(eventSelected)
 
-    const minusQuantity = () => {
+    /*const minusQuantity = () => {
         if(quantity <= 0){
             setQuantity(0)
         }else{
@@ -34,16 +37,91 @@ const Ev = () => {
         }else if(quantity === 10){
             setQuantity(10)
         }
-    }
+    }*/
 
     
         const updateEventTicket = (ticketId, action) => {
             if(action === "minus"){
-//mandar el id del ticket para quitar la cantidad a waiting (todavia no comprado)
+                setEventSelected((prevEventSelected) => 
+                    prevEventSelected.map((eventS) => {
+                      return {
+                        ...eventS,  // Spread the event object to keep the other properties intact
+                        ticket: eventS.ticket.map((et) => {
+                          if (et._id === ticketId) {
+                            if(et.waiting <= 0){
+                                setTotalSelled(totalSelled - 0)
+                                return {
+                                    ...et,  // Spread the ticket object to keep the other properties intact
+                                    waiting: et.waiting - 0,  // Update the quantity
+                                };
+                            }else{
+                                setTotalSelled(totalSelled - 1)
+                                const priceToNum = Number(et.price)
+                                setTotal(total - priceToNum)
+                                return {
+                                  ...et,  // Spread the ticket object to keep the other properties intact
+                                  waiting: et.waiting - 1,  // Update the quantity
+                                };
+                            }
+                          }
+                          return et;  // If the ticket ID doesn't match, return the ticket unchanged
+                        }),
+                      };
+                    })
+                  );
+                  console.log(eventSelected)
+                //mandar el id del ticket para quitar la cantidad a waiting (todavia no comprado)
             }else if(action === "plus"){
-//mandar el id del ticket para agregar la cantidad a waiting (todavia no comprado)
+                setEventSelected((prevEventSelected) => 
+                    prevEventSelected.map((eventS) => {
+                      return {
+                        ...eventS,  // Spread the event object to keep the other properties intact
+                        ticket: eventS.ticket.map((et) => {
+                            if (et._id === ticketId) {
+                                if(et.waiting < 10){
+                                    setTotalSelled(totalSelled + 1)
+                                    const priceToNum = Number(et.price)
+                                    setTotal(total + priceToNum)
+                                    return {
+                                        ...et,  // Spread the ticket object to keep the other properties intact
+                                        waiting: et.waiting + 1,  // Update the quantity
+                                    };
+                                }else{
+                                    return {
+                                        ...et,  // Spread the ticket object to keep the other properties intact
+                                        waiting: et.waiting + 0,  // Update the quantity
+                                    };
+                                }
+                              }
+                          return et;  // If the ticket ID doesn't match, return the ticket unchanged
+                        }),
+                      };
+                    })
+                  );
+                console.log(eventSelected)
+                //mandar el id del ticket para agregar la cantidad a waiting (todavia no comprado)
             }
         }
+
+
+    const buyTicket = async (eventBuyedId) => {
+       const extractBuyedInfo = eventSelected[0].ticket.map(ticket => ({
+            category: ticket.category,
+            buyQuantity: ticket.waiting
+        }));
+
+        const buyData = {
+            userId:'67c1d48633cfeea75ba64212',
+            eventBuyedId: eventBuyedId,
+            status: 1,
+            tickets: eventSelected[0].ticket,
+            cost: Number(total),
+            totalSelled: totalSelled,
+            extractBuyedInfo: extractBuyedInfo
+        }
+        console.log("buyData: ", buyData)
+        await buyTicketRequest(buyData)
+    }
     
 
     return(
@@ -58,7 +136,7 @@ const Ev = () => {
                     <p className='text-xl'>Adress: {evS.eventAdress} </p><br></br>
                     <p className='text-xl'>Fecha: {evS.eventDate}</p><br></br>
                     <p>{evS.eventDescription}</p><br></br>
-                    <p>Personas que asisten al evento: {evS.assists}</p><br></br>
+                    <p>Personas que asisten al evento: {evS.sells}</p><br></br>
                     <h5>Compra tus entradas:</h5><br></br>
                     <div className='flex'>
                         <div className="purchase-categories">
@@ -74,9 +152,13 @@ const Ev = () => {
                             </div>)}
                         </div>
                         <div className='text-center ml-6'>
-                            <button className='mx-auto bg-yellow-500 text-black rounded-lg p-3 ml-6 text-xl'>Comprar mis entrada</button>
+                            <button className='mx-auto bg-yellow-500 text-black rounded-lg p-3 ml-6 text-xl' onClick={() => buyTicket(evS._id)}>Comprar mis entrada</button>
                             <button className='mx-auto bg-slate-950 rounded-lg p-3 ml-6 text-xl'>Cancelar compra</button>
                         </div>
+                    </div>
+                    <div>
+                        <p>Total: {total}</p>
+                        <p>Tickets en compra: {totalSelled} </p>
                     </div>
                 </div>
             </div>)}
