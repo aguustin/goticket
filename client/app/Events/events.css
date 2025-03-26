@@ -96,6 +96,7 @@ body {
   }
   .events{
     overflow-x: hidden;
+    overflow-y: scroll;
   }
 
   .event-title{

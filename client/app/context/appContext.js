@@ -11,15 +11,25 @@ export const AppContextProvider = ({children}) => {
     const [showResIng, setShowResIng] = useState(false)
     const [signForm, setSignInForm] = useState(false)
     const [eventsInfo, setEventsInfo] = useState([])
+    const [session, setSession] = useState([])
 
     useEffect(() => {
+        const getSessionFunc = async () => {
+            const items = await JSON.parse(localStorage.getItem('items'))
+            if(items){
+                setUserInfo(items?.[0])
+            }
+        }
+        
         const getAllEvents = async () => {
             const res = await getAllEventsRequest()
             setEventsInfo(res.data)
 
         }
+        getSessionFunc()
         getAllEvents()
     }, [])
+  
     console.log(eventsInfo)
 
     return(

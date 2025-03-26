@@ -81,8 +81,14 @@ export const buyTicketController = async (req, res) => {
         if(eventIsOnList){
             res.status(200).json(2)
         }else{*/
-
-        console.log(extractBuyedInfo)
+        const arrayFilters = tickets.map((ticket, index) => ({
+            [`elem${index}._id`]: ticket._id,  // Use a unique field name for each filter
+          }));
+        const setFields = tickets.reduce((acc, ticket, index) => {
+            acc[`ticket.$[elem${index}].sellsByCat`] = ticket.sellsByCat;
+            return acc;
+        }, {});
+        
         if(getUser.length > 0){
             await users.updateOne(
                 {_id: userId},
@@ -103,14 +109,18 @@ export const buyTicketController = async (req, res) => {
                 }
             )
             await eventsModel.updateOne(
-                {_id:eventBuyedId},
+                { _id: eventBuyedId },  // Match the event by its ID
                 {
-                    $inc:{
-                        sells:totalSelled,
-                        profits:cost,
-                    }
+                    $inc: {
+                    sells: totalSelled,  // Increment total sells
+                    profits: cost,       // Increment total profits
+                    },
+                    $set: setFields
+                },
+                {
+                    arrayFilters,  // Array filters for each ticket
                 }
-            )
+            );
             await eventsModel.aggregate([
                  // Unwind buys array to work with each event buy
                 { $unwind: "$buys" },

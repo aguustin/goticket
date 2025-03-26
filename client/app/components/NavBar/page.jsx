@@ -4,9 +4,10 @@ import certificatePng from '@/app/assets/certificate.png'
 import ResIng from '../ResIng/page'
 import { useContext } from 'react'
 import UserContext from '@/app/context/appContext'
+import { loginRequest } from '@/app/api/userApi'
 
 const NavBar = () => {
-    const { userInfo, showResIng, setShowResIng,  setSignInForm} = useContext(UserContext)
+    const { userInfo, showResIng, setShowResIng,  setSignInForm } = useContext(UserContext)
 
     const showRes = () => {
         setShowResIng(true)
@@ -29,7 +30,7 @@ const NavBar = () => {
                 </div>
                 :
                 <div className='nav-div-buttons absolute right-10 flex items-center'>
-                    <p>Hola {userInfo[0]?.name} {userInfo[0]?.lastname}</p>
+                    <p>Hola {userInfo?.name} {userInfo?.lastname}</p>
                 </div>
                 }   
             </nav>

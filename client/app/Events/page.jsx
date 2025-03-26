@@ -1,5 +1,5 @@
 "use client"
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import "./events.css"
 import pruebaJpg from "@/app/assets/prueba.jpg"
 import Link from "next/link"
@@ -8,20 +8,28 @@ import AppContext from "../context/appContext"
 
 export default function Events() {
 
-    const {eventsInfo} = useContext(AppContext)
+    const {eventsInfo, userInfo} = useContext(AppContext)
+    const [search, setSearch] = useState('')
 
       return (
         <>
-            <div className="p-9 mt-16 flex flex-wrap bg-slate-900 w-screen">
-                {eventsInfo.map((ei) => 
-                    <div key={ei._id} className="mx-auto">
-                    <Link href={`/Events/${ei._id}`} className="event-card mx-auto m-3 max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-slate-950 dark:border-gray-700">
+            <div className="events relative p-9 mt-[70px] flex flex-wrap bg-slate-900 w-screen h-screen">
+                <form className="fixed right-10">
+                    <input className="p-3 rounded-lg bg-slate-950" type="text" placeholder="Buscar evento" onChange={(e) =>setSearch(e.target.value)}></input>
+                </form>
+                {eventsInfo.filter((ef) => {
+                    return search.toLowerCase() === ''
+                    ? ef 
+                    : ef.eventName.toLowerCase().includes(search)
+                }).map((ei) => 
+                    <div key={ei._id} className="mx-auto mb-6">
+                    <Link href={`/Events/${userInfo?._id}/${ei._id}`} className="event-card mx-auto m-3 max-w-sm bg-white rounded-lg">
                         <img className="object-fill rounded-t-lg h-[350px] w-[350px]" src={ei.eventImg} alt=""/>
-                        <div className="p-5">
-                            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{ei.eventName}</h5>
-                            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Adress: {ei.eventAdress}</p> 
-                            <p>Fecha: {ei.eventDate}</p>
-                            <div className="flex items-center justify-between">
+                        <div className="pt-5 pb-5 bg-slate-950 w-full">
+                            <h5 className="mb-2 ml-3 mr-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{ei.eventName}</h5>
+                            <p className="mb-3 ml-3 mr-3 font-normal text-gray-700 dark:text-gray-400">Adress: {ei.eventAdress}</p> 
+                            <p className="mb-3 ml-3 mr-3">Fecha: {ei.eventDate}</p>
+                            <div className="flex items-center justify-between ml-3 mr-3">
                                 <button href="#" className="inline-flex mt-6 items-center px-3 py-2 text-sm font-medium text-center text-black text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-yellow-500 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                     Ver evento
                                     <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">

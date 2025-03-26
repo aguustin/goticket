@@ -1,6 +1,6 @@
 "use client"
 import { useParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import './ev.css'
 import pruebaJpg from "@/app/assets/prueba.jpg"
 import { getSelectedEventRequest } from '@/app/api/eventApi'
@@ -8,11 +8,12 @@ import { buyTicketRequest } from '@/app/api/userApi'
 
 const Ev = () => {
     const params = useParams()
+    //const {userInfo} = useContext(AppContext)
     const [eventSelected, setEventSelected] = useState([])
+    const [sellsByCat, setSellsByCat] = useState(0)
     const [totalSelled, setTotalSelled] = useState(0)
     const [total, setTotal] = useState(0)
-    const [buyedDesc, setBuyedDesc] = useState([])
-
+    console.log(params)
     useEffect(() => {
         const getEvent = async () => {
             const res = await getSelectedEventRequest(params.eventId)
@@ -40,7 +41,7 @@ const Ev = () => {
     }*/
 
     
-        const updateEventTicket = (ticketId, action) => {
+        const updateEventTicket = (ticketId, action, categorySells) => {
             if(action === "minus"){
                 setEventSelected((prevEventSelected) => 
                     prevEventSelected.map((eventS) => {
@@ -50,17 +51,21 @@ const Ev = () => {
                           if (et._id === ticketId) {
                             if(et.waiting <= 0){
                                 setTotalSelled(totalSelled - 0)
+                                setSellsByCat(sellsByCat - 0)
                                 return {
                                     ...et,  // Spread the ticket object to keep the other properties intact
                                     waiting: et.waiting - 0,  // Update the quantity
+                                    sellsByCat: et.sellsByCat - 0
                                 };
                             }else{
+                                const categorySellsToNum = Number(categorySells)
                                 setTotalSelled(totalSelled - 1)
                                 const priceToNum = Number(et.price)
                                 setTotal(total - priceToNum)
                                 return {
                                   ...et,  // Spread the ticket object to keep the other properties intact
                                   waiting: et.waiting - 1,  // Update the quantity
+                                  sellsByCat:  et.sellsByCat - categorySellsToNum  
                                 };
                             }
                           }
@@ -79,39 +84,45 @@ const Ev = () => {
                         ticket: eventS.ticket.map((et) => {
                             if (et._id === ticketId) {
                                 if(et.waiting < 10){
+                                    const categorySellsToNum = Number(categorySells)
                                     setTotalSelled(totalSelled + 1)
                                     const priceToNum = Number(et.price)
                                     setTotal(total + priceToNum)
                                     return {
                                         ...et,  // Spread the ticket object to keep the other properties intact
                                         waiting: et.waiting + 1,  // Update the quantity
+                                        sellsByCat: et.sellsByCat + categorySellsToNum
                                     };
                                 }else{
                                     return {
                                         ...et,  // Spread the ticket object to keep the other properties intact
                                         waiting: et.waiting + 0,  // Update the quantity
+                                        sellsByCat: et.sellsByCat + 0
                                     };
                                 }
+                                
                               }
                           return et;  // If the ticket ID doesn't match, return the ticket unchanged
                         }),
                       };
                     })
-                  );
-                console.log(eventSelected)
+                );
+    
+               console.log("eee: ", eventSelected)
+               
                 //mandar el id del ticket para agregar la cantidad a waiting (todavia no comprado)
             }
         }
-
+        //console.log(sellsByCat)
 
     const buyTicket = async (eventBuyedId) => {
        const extractBuyedInfo = eventSelected[0].ticket.map(ticket => ({
             category: ticket.category,
-            buyQuantity: ticket.waiting
+            buyQuantity: ticket.waiting,
         }));
 
         const buyData = {
-            userId:'67c1d48633cfeea75ba64212',
+            userId:params.userId,
             eventBuyedId: eventBuyedId,
             status: 1,
             tickets: eventSelected[0].ticket,
@@ -144,9 +155,9 @@ const Ev = () => {
                             <div className="flex items-center mt-3" key={tck._id}>
                                 <p>{tck.category}:</p>
                                 <div className="purchase-tickets flex ml-6 items-center justify-between w-[130px]">
-                                    <button className="bg-yellow-500 text-black p-1 pl-4 pr-4" onClick={() => updateEventTicket(tck._id, "minus")}><p>-</p></button>
+                                    <button className="bg-yellow-500 text-black p-1 pl-4 pr-4" onClick={() => updateEventTicket(tck._id, "minus", tck.price)}><p>-</p></button>
                                     <p className="text-white">{tck.waiting}</p>
-                                    <button className="bg-yellow-500 text-black p-1 pl-4 pr-4" onClick={() => updateEventTicket(tck._id, "plus")}><p>+</p></button>
+                                    <button className="bg-yellow-500 text-black p-1 pl-4 pr-4" onClick={() => updateEventTicket(tck._id, "plus", tck.price)}><p>+</p></button>
                                     <p>{tck.price}</p>
                                 </div>
                             </div>)}
@@ -158,7 +169,7 @@ const Ev = () => {
                     </div>
                     <div>
                         <p>Total: {total}</p>
-                        <p>Tickets en compra: {totalSelled} </p>
+                        <p>Tickets en el carrito: {totalSelled} </p>
                     </div>
                 </div>
             </div>)}

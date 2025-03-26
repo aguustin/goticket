@@ -55,7 +55,7 @@ export const createEventController = async (req, res) => {
                             category:category,
                             quantity:quantity,
                             waiting:0,
-		                    sells:0,
+		                    sellsByCat:0,
                             visible:visible
                         }]
                     });

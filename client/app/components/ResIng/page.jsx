@@ -4,13 +4,13 @@ import { useContext, useState } from "react"
 import googlePng from '@/app/assets/google.png'
 import applePng from '@/app/assets/apple.png'
 import closePng from '@/app/assets/close.png'
-import UserContext from '@/app/context/appContext'
+import AppContext from '@/app/context/appContext'
 import { loginRequest, signUpRequest } from '@/app/api/userApi'
 import { redirect } from 'next/navigation'
 
 const ResIng = () => {
 
-    const {setUserInfo, setShowResIng, signForm, setSignInForm} = useContext(UserContext)
+    const {setUserInfo, setShowResIng, signForm, setSignInForm} = useContext(AppContext)
     const [isChecked, setIsChecked] = useState(false)
     const [showMsg, setShowMsg] = useState(false)
     const [message, setMessage] = useState('')
@@ -23,7 +23,9 @@ const ResIng = () => {
         }
         const res = await loginRequest(loginData)
         if(res.data.length > 0){
-            setUserInfo(res.data)
+            localStorage.setItem('items', JSON.stringify(res.data));
+            const items = await JSON.parse(localStorage.getItem('items'))
+            setUserInfo(items)
             setShowResIng(false)
             redirect('/Home')
         }else{

@@ -43,7 +43,7 @@ const Producer = () => {
 
         const res = await createEventRequest(eventData)
 
-        console.log(res.data);
+        console.log(eventData);
         if(res.data === 2){
             console.log('updateado')
         }else{
