@@ -49,16 +49,17 @@ export const createEventController = async (req, res) => {
                         eventDescription: eventDescription,
                         eventDate: Date.now(),
                         sells: 0,
-                        profits: 0,
-                        ticket: [{
-                            price:price,
+                        profits: 0
+                        /*ticket: [{
+                            /*price:price,
                             category:category,
                             quantity:quantity,
                             waiting:0,
 		                    sellsByCat:0,
                             visible:visible
-                        }]
+                        }]*/
                     });
+                    console.log(organizationId, ' ', newEvent._id)
                     await usersModel.updateOne(
                         {_id: organizationId},
                         {
@@ -100,16 +101,16 @@ export const getEventByCategoryController = async (req, res) => {
     res.send(getEvents)
 }
 
-export const getMyEventsController = async (req, res) => {
-    const {userId} = req.body
-
-    const getEvents = await eventsModel.find({_id: userId})
+export const getMyCreatedEventsController = async (req, res) => {
+    const {userId} = req.params
+    console.log(userId)
+    const getEvents = await eventsModel.find({organizationId: userId})
     res.send(getEvents)
 }
 
 export const updateMyEventController = async (req, res) => {
-    const {eventId, eventName, eventAdress, eventCategory, tickets} = req.body
-    console.log(eventId)
+    const {eventSelected} = req.body
+    console.log(eventSelected)
 
     if(req.file){
       const result = await cloudinary.uploader.upload(req.file.path, {
@@ -134,16 +135,10 @@ export const updateMyEventController = async (req, res) => {
         )
     }else{
         await eventsModel.updateOne(
-            {_id:eventId},
+            {_id:eventSelected._id},
             {
                 $set:{
-                    eventName,
-                    eventAdress,
-                    eventCategory,
-                    eventDescription,
-                    ticket:[{
-                        ...tickets
-                    }]
+                    eventSelected
                 }
             }
         )

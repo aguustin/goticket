@@ -4,4 +4,8 @@ export const createEventRequest = (eventData) => axios.post('http://localhost:40
 
 export const getAllEventsRequest = () => axios.get('http://localhost:4000/allEvents');
 
-export const getSelectedEventRequest = (eventId) => axios.get(`http://localhost:4000/getEventById/${eventId}`)  
+export const getSelectedEventRequest = (eventId) => axios.get(`http://localhost:4000/getEventById/${eventId}`)
+
+export const getCreatedEventsRequest = (userId) => axios.get(`http://localhost:4000/getMyCreatedEvents/${userId}`)
+
+export const updateMyEventRequest = (eventSelected) => axios.post('http://localhost:4000/updateMyEvent', eventSelected)

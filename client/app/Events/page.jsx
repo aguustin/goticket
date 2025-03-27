@@ -5,12 +5,13 @@ import pruebaJpg from "@/app/assets/prueba.jpg"
 import Link from "next/link"
 import peoplePng from "@/app/assets/people.png"
 import AppContext from "../context/appContext"
+import { useParams } from "next/navigation"
 
 export default function Events() {
-
+    const params = useParams()
     const {eventsInfo, userInfo} = useContext(AppContext)
     const [search, setSearch] = useState('')
-
+    console.log(params)
       return (
         <>
             <div className="events relative p-9 mt-[70px] flex flex-wrap bg-slate-900 w-screen h-screen">

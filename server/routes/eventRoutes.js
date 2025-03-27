@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createEventController, deleteEventController, getAllEventsController, getEventByCategoryController, getEventById, getMyEventsController, updateMyEventController } from "../controllers/eventsController.js";
+import { createEventController, deleteEventController, getAllEventsController, getEventByCategoryController, getEventById, getMyCreatedEventsController, updateMyEventController } from "../controllers/eventsController.js";
 import { upload } from "../middleware/multer.js";
 
 const route = Router()
@@ -12,7 +12,7 @@ route.get('/getEventById/:eventId', getEventById)
 
 route.post('/getEventByCategory', getEventByCategoryController)
 
-route.post('/getMyEvents', getMyEventsController)
+route.get('/getMyCreatedEvents/:userId', getMyCreatedEventsController)
 
 route.post('/updateMyEvent', upload.single('eventImg'), updateMyEventController)
 

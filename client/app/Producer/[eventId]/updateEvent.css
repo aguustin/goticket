@@ -1,0 +1,25 @@
+.tickets-form{
+    overflow-y: auto;
+}
+.tickets-container{
+    overflow-y: auto;
+}
+
+.tickets-form::-webkit-scrollbar{
+    background-color: rgb(40, 34, 83);
+    width: 7px;
+}
+
+.tickets-form::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: #51479c;
+}
+
+.tickets-container::-webkit-scrollbar{
+    background-color: rgb(56, 48, 116);
+    width: 3px;
+}
+
+.tickets-container::-webkit-scrollbar-thumb{
+    background-color: #231f44;
+}

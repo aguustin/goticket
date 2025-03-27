@@ -11,7 +11,7 @@ export const AppContextProvider = ({children}) => {
     const [showResIng, setShowResIng] = useState(false)
     const [signForm, setSignInForm] = useState(false)
     const [eventsInfo, setEventsInfo] = useState([])
-    const [session, setSession] = useState([])
+    const [myEventState, setMyEventState] = useState([])
 
     useEffect(() => {
         const getSessionFunc = async () => {
@@ -33,7 +33,7 @@ export const AppContextProvider = ({children}) => {
     console.log(eventsInfo)
 
     return(
-        <AppContext.Provider value={{userInfo, setUserInfo, showResIng, setShowResIng, signForm, setSignInForm, eventsInfo}}>{children}</AppContext.Provider>
+        <AppContext.Provider value={{userInfo, setUserInfo, showResIng, setShowResIng, signForm, setSignInForm, eventsInfo, myEventState, setMyEventState}}>{children}</AppContext.Provider>
     )
 }
 
