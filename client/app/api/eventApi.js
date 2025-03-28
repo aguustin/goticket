@@ -8,4 +8,8 @@ export const getSelectedEventRequest = (eventId) => axios.get(`http://localhost:
 
 export const getCreatedEventsRequest = (userId) => axios.get(`http://localhost:4000/getMyCreatedEvents/${userId}`)
 
-export const updateMyEventRequest = (eventSelected) => axios.post('http://localhost:4000/updateMyEvent', eventSelected)
+export const updateMyEventRequest = (eventData) => axios.post('http://localhost:4000/updateMyEvent', eventData, {
+    headers:{
+        'Content-Type': 'multipart/form-data'
+    }
+})

@@ -109,8 +109,8 @@ export const getMyCreatedEventsController = async (req, res) => {
 }
 
 export const updateMyEventController = async (req, res) => {
-    const {eventSelected} = req.body
-    console.log(eventSelected)
+    //const {eventSelected} = req.body
+    const eventSelected = JSON.parse(req.body.eventSelected)
 
     if(req.file){
       const result = await cloudinary.uploader.upload(req.file.path, {
@@ -119,26 +119,28 @@ export const updateMyEventController = async (req, res) => {
     })
         
         await eventsModel.updateOne(
-            {_id:eventId},
+            {_id:eventSelected[0]._id},
             {
                 $set:{
                     eventImg: result.secure_url,
-                    eventName,
-                    eventAdress,
-                    eventCategory,
-                    eventDescription,
-                    ticket:[{
-                        ...tickets
-                    }]
+                    eventName: eventSelected[0]?.eventName,
+                    eventAdress: eventSelected[0]?.eventAdress,
+                    eventCategory: eventSelected[0]?.eventCategory,
+                    eventDescription: eventSelected[0]?.eventDescription,
+                    ticket: eventSelected[0]?.ticket
                 }
             }
         )
     }else{
         await eventsModel.updateOne(
-            {_id:eventSelected._id},
+            {_id:eventSelected[0]?._id},
             {
                 $set:{
-                    eventSelected
+                    eventName: eventSelected[0]?.eventName,
+                    eventAdress: eventSelected[0]?.eventAdress,
+                    eventCategory: eventSelected[0]?.eventCategory,
+                    eventDescription: eventSelected[0]?.eventDescription,
+                    ticket: eventSelected[0]?.ticket
                 }
             }
         )

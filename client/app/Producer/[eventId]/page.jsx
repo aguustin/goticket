@@ -62,19 +62,26 @@ const UpdateEvent = () => {
     }
     
     console.log("updateado: " ,eventSelected)
+    
     const updateEventFunc = async (e) => { //ver como updatear el documento completo con imagen y todo o sin imagen lpm!!!
-        e.preventDefault()
-        if(e.target.elements.eventImg.files[0]){
-            const eventData = new FormData()
-            eventData.append('eventImg', e.target.elements.eventImg.files[0])
-            const res = await updateMyEventRequest(eventSelected, eventData)
-            console.log(res.data)
-        }else{
-            console.log('entra por aca')
-            const res = await updateMyEventRequest(eventSelected)
-            console.log(res.data)
-        }
-        e.preventDefault()
+    e.preventDefault()
+      
+    const eventData = new FormData();
+    
+    // Append eventSelected object (stringified) to FormData
+    eventData.append('eventSelected', JSON.stringify(eventSelected));
+
+    // Append eventImg file if available
+    if (e.target.elements.eventImg.files[0]) {
+        eventData.append('eventImg', e.target.elements.eventImg.files[0]);
+    }
+
+    try {
+        const res = await updateMyEventRequest(eventData);  // Just pass eventData here, no need to pass eventSelected again.
+        console.log(res.data);
+    } catch (error) {
+        console.error(error);
+    }
 
     }
 
