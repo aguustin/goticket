@@ -6,6 +6,7 @@ import Link from "next/link"
 import peoplePng from "@/app/assets/people.png"
 import AppContext from "../context/appContext"
 import { useParams } from "next/navigation"
+import starSvg from "@/app/assets/star.svg"
 
 export default function Events() {
     const params = useParams()
@@ -27,7 +28,9 @@ export default function Events() {
                     <Link href={`/Events/${userInfo?._id}/${ei._id}`} className="event-card mx-auto m-3 max-w-sm bg-white rounded-lg">
                         <img className="object-fill rounded-t-lg h-[350px] w-[350px]" src={ei.eventImg} alt=""/>
                         <div className="pt-5 pb-5 bg-slate-950 w-full">
-                            <h5 className="mb-2 ml-3 mr-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{ei.eventName}</h5>
+                            <div className="flex items-center justify-between">
+                                <h5 className="mb-2 ml-3 mr-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{ei.eventName}</h5>
+                            </div>
                             <p className="mb-3 ml-3 mr-3 font-normal text-gray-700 dark:text-gray-400">Adress: {ei.eventAdress}</p> 
                             <p className="mb-3 ml-3 mr-3">Fecha: {ei.eventDate}</p>
                             <div className="flex items-center justify-between ml-3 mr-3">

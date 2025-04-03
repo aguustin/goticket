@@ -16,7 +16,7 @@ const UpdateEvent = () => {
     const [visible, setVisible] = useState()
     const [disableAdd, setDisableAdd] = useState(false)
     let i = 0
-
+    
     useEffect(() => {
             const getEvent = async () => {
                 const res = await getSelectedEventRequest(param.eventId)
@@ -37,6 +37,13 @@ const UpdateEvent = () => {
         if(price <= 0 || quantity <= 0){
             console.log('faltan datos')
         }else{
+            /*const event = {
+                eventAdress:'',
+                eventDate:'',
+                eventDescription:'',
+                eventImg: "https://res.cloudinary.com/drmcrdf4r/image/upload/v1743017009/goticket/htkvh0dzlcnbjtmgbkdt.png",
+                eventName: eventName
+            }*/
             const ticket = {
                 price: price,
                 category: category,
@@ -57,33 +64,48 @@ const UpdateEvent = () => {
               });
               setDisableAdd(false)
               setNewTicketState(0)
-            //buscar en chat gpt como updatear el estado eventSelected con ticket
+           
         } 
     }
     
     console.log("updateado: " ,eventSelected)
+
+    const updateEventFunc = async (e) => { 
+        e.preventDefault()
+        const eventData = new FormData();
+        eventData.append('eventSelected', JSON.stringify(eventSelected));
+   
+        if (e.target.elements.eventImg.files[0]) {
+            eventData.append('eventImg', e.target.elements.eventImg.files[0]);
+        }
+
+        try {
+            const res = await updateMyEventRequest(eventData);  
+            console.log(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
+
+    const handleChange = (id, field, value) => {
+        setEventSelected((prevState) =>
+            prevState.map((event) =>
+                event._id === id ? { ...event, [field]: value } : event
+            )
+        );
+
+    };
     
-    const updateEventFunc = async (e) => { //ver como updatear el documento completo con imagen y todo o sin imagen lpm!!!
-    e.preventDefault()
-      
-    const eventData = new FormData();
-    
-    // Append eventSelected object (stringified) to FormData
-    eventData.append('eventSelected', JSON.stringify(eventSelected));
-
-    // Append eventImg file if available
-    if (e.target.elements.eventImg.files[0]) {
-        eventData.append('eventImg', e.target.elements.eventImg.files[0]);
-    }
-
-    try {
-        const res = await updateMyEventRequest(eventData);  // Just pass eventData here, no need to pass eventSelected again.
-        console.log(res.data);
-    } catch (error) {
-        console.error(error);
-    }
-
-    }
+    const handleFileChange = (id, event) => {
+        const file = event.target.files[0];
+        const fileURL = URL.createObjectURL(file); // Assuming you're uploading the file and displaying it as a URL
+        setEventSelected((prevState) =>
+            prevState.map((ev) =>
+                ev._id === id ? { ...ev, eventImg: fileURL } : ev
+            )
+        );
+    };
 
 return(
     <>
@@ -94,24 +116,24 @@ return(
                     <div key={evS._id}>
                     <div>
                         <label htmlFor="upload-file-event" className="custom-file-upload bg-slate-950"><img className='mx-auto' src={evS.eventImg}></img></label><br></br>
-                        <input id="upload-file-event" type="file" name="eventImg" />
+                        <input id="upload-file-event" type="file" name="eventImg"  onChange={(e) => handleFileChange(evS._id, e)} />
                     </div>
                     <div>
                         <label className="text-xl">Nombre del evento:</label><br></br>
-                        <input className="rounded-lg bg-slate-950 p-1 w-[370px]" type="text" name="eventName" value={evS.eventName} onChange={(e) => (e.target.value)}></input>
+                        <input className="rounded-lg bg-slate-950 p-1 w-[370px]" type="text" name="eventName" value={evS.eventName || ''} onChange={(e) => handleChange(evS._id, 'eventName', e.target.value)}></input>
                     </div><br></br>
                     <div>
                         <label className="text-xl">Direccion:</label><br></br>
-                        <input className="rounded-lg bg-slate-950 p-1 w-[370px]" type="text" name="eventAdress" value={evS.eventAdress} onChange={(e) => (e.target.value)}></input>
+                        <input className="rounded-lg bg-slate-950 p-1 w-[370px]" type="text" name="eventAdress" value={evS.eventAdress} onChange={(e) => handleChange(evS._id, 'eventAdress', e.target.value)}></input>
                     </div><br></br>
                     <div>
                         <label className="text-xl">Descripcion (opcional):</label><br></br>
-                        <input className="rounded-lg bg-slate-950 p-1 w-[370px]" type="text" name="eventDescription" value={evS.eventDescription} onChange={(e) => (e.target.value)}></input>
+                        <input className="rounded-lg bg-slate-950 p-1 w-[370px]" type="text" name="eventDescription" value={evS.eventDescription} onChange={(e) => handleChange(evS._id, 'eventDescription', e.target.value)} ></input>
                     </div><br></br>
                     <div>
                         <label className="text-xl">Fecha:</label><br></br>
                         <div className="flex items-center">
-                            <input className="rounded-lg bg-slate-950 p-1" type="date" name="eventDate"></input>
+                            <input className="rounded-lg bg-slate-950 p-1" type="date" name="eventDate" value={evS.eventDate ? new Date(parseInt(evS.eventDate)).toISOString().split('T')[0] : ''} onChange={(e) => handleChange(evS._id, 'eventDate', new Date(e.target.value).getTime())}></input>
                             <p className="ml-3">Fecha actual: {evS.eventDate} </p>
                         </div>
                     </div><br></br>

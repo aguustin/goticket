@@ -150,11 +150,13 @@ export const updateMyEventController = async (req, res) => {
 
 export const deleteEventController = async (req, res) => {
     const {userId, eventId} = req.body
-
+    console.log(userId, " ", eventId)
     const getEvent = await eventsModel({_id:eventId, organizationId: userId})
-    if(getEvent.length > 0){
+    console.log(getEvent)
+    if(getEvent){
         await eventsModel.deleteOne({_id:eventId}) 
-        res.sendStatus(200) 
+        res.status(200).json(1) 
+    }else{
+        res.status(300).json(2)
     } 
-     res.status(300).json(2)
 }

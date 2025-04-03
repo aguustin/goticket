@@ -9,15 +9,21 @@ import searchPng from '@/app/assets/search-event.png'
 import logoutPng from '@/app/assets/logout.png'
 import upArrowPng from '@/app/assets/up-arrow.png'
 import downArrowPng from '@/app/assets/down-arrow.png'
-import Image from 'next/image'
 import { useContext, useState } from 'react'
 import Link from 'next/link'
 import UserContext from '@/app/context/appContext'
+import { redirect } from 'next/navigation'
 
 const SideBar = () => {
 
     const [openCategoryNav, setOpenCategoryNav] = useState(false)
     const {userInfo} = useContext(UserContext)
+
+    const logout = () => {
+        localStorage.clear()
+        window.location.reload();
+        redirect('/Home')
+    }
  
     return(
         <>
@@ -69,10 +75,10 @@ const SideBar = () => {
                         <p className='ml-3'>Crear evento</p>
                     </Link>}
                 </div>
-                <button className='logout-button w-full absolute bottom-0 justify-between flex items-center text-center pt-6 pb-6 pr-10 bg-slate-800'>
+                {userInfo.rol > 0 && <button onClick={() => logout()}  className='logout-button w-full absolute bottom-0 justify-between flex items-center text-center pt-6 pb-6 pr-10 bg-slate-800'>
                     <img className='ml-3' src={logoutPng.src} alt=""></img>
                     <p className='ml-3'>Salir</p>
-                </button>
+                </button>}
             </nav>
         </>
     )

@@ -13,3 +13,5 @@ export const updateMyEventRequest = (eventData) => axios.post('http://localhost:
         'Content-Type': 'multipart/form-data'
     }
 })
+
+export const deleteEventRequest = (data) => axios.post('http://localhost:4000/deleteEvent', data)

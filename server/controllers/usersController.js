@@ -1,9 +1,10 @@
 import eventsModel from "../models/eventsModel.js"
 import users from "../models/usersModel.js"
 import bcrypt from "bcrypt"
+import { v4 as uuidv4 } from 'uuid';
 
 export const signUpController = async (req, res) => {
-    const {name, lastname, mail, password, confirmPassword, country, rol} = req.body
+    const {name, mail, password, confirmPassword, rol} = req.body
     console.log(req.body)
     if(password === confirmPassword){
         let findUser = await users.find({mail: mail})
@@ -14,11 +15,9 @@ export const signUpController = async (req, res) => {
             const encryptedPass = await bcrypt.hash(password, salt)
             const user = await users.create({
                 name: name,
-                lastname: lastname,
                 mail: mail,
                 password: encryptedPass,
-                country: country,
-                rol:rol
+                rol:2
             })
             res.status(200).json(user)
         }
@@ -27,7 +26,26 @@ export const signUpController = async (req, res) => {
 
 
 export const signInController = async (req, res) => {
-    const {mail, password} = req.body
+    const {mail, emailVerified, name, password} = req.body
+    console.log(emailVerified)
+    if(emailVerified === true){
+        const getCredentials = await users.find({mail: mail})
+        if(getCredentials.length > 0){
+            return res.send(getCredentials)
+        }else{
+            let salt = 10
+            const uidForPass = await uuidv4();
+            const encryptedPass = await bcrypt.hash(uidForPass, salt)
+            const user = await users.create({
+                name: name,
+                mail: mail,
+                password: encryptedPass,
+                rol:2
+            })
+            return res.status(200).json(user)
+        }
+
+    }
     const getCredentials = await users.find({mail: mail})
     const decryptPass = await bcrypt.compare(password, getCredentials[0].password)
     decryptPass ? res.send(getCredentials) :  res.status(200).json(2)
@@ -173,4 +191,10 @@ export const buyTicketController = async (req, res) => {
             res.status(300).json('El usuario no existe')
         }
     //}
+}
+
+
+export const borrarUnUsuariocontroller = async (req, res) => {
+    await users.deleteOne({mail: "agustin.molee@gmail.com"})
+    res.sendStatus(200)
 }

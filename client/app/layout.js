@@ -4,6 +4,7 @@ import Footer from "./components/Footer/page";
 import NavBar from "./components/NavBar/page";
 import SideBar from "./components/sideBar/page";
 import { AppContextProvider } from "./context/appContext";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,12 +28,14 @@ export default function RootLayout({ children }) {
         className={`h-screen overflow-hidden ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AppContextProvider>
+        <GoogleOAuthProvider clientId="628337246968-cd0hpg1sjd74np8qt0ou5no62o8am4dc.apps.googleusercontent.com">
           <NavBar/>
           <div className="flex">
             <SideBar/>
             {children}
           </div>
           <Footer/>
+          </GoogleOAuthProvider>
         </AppContextProvider>
       </body>
     </html>

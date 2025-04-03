@@ -8,6 +8,7 @@ const eventSchema = mongoose.Schema({
     eventCategory:{type:Number},
 	eventDescription:{type:String},
 	eventDate:{type:String},
+	eventCountry:{type:String},
     qrGeneration:{type:String},
 	sells:{type:Number},
 	profits:{type:Number},

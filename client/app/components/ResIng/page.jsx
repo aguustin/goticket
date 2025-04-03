@@ -7,6 +7,8 @@ import closePng from '@/app/assets/close.png'
 import AppContext from '@/app/context/appContext'
 import { loginRequest, signUpRequest } from '@/app/api/userApi'
 import { redirect } from 'next/navigation'
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
 
 const ResIng = () => {
 
@@ -27,6 +29,30 @@ const ResIng = () => {
             const items = await JSON.parse(localStorage.getItem('items'))
             setUserInfo(items)
             setShowResIng(false)
+            await window.location.reload();
+            redirect('/Home')
+        }else{
+            setShowMsg(true)
+            setMessage('Las credenciales son incorrectas')
+        }
+    }
+
+    const loginWithGoogle = async (email, emailVerified, name) => {
+        
+        const loginData = {
+            mail:email,
+            password: null, 
+            emailVerified:emailVerified,
+            name:name
+        }
+        const res = await loginRequest(loginData)
+
+        if(res.data.length > 0){
+            localStorage.setItem('items', JSON.stringify(res.data));
+            const items = await JSON.parse(localStorage.getItem('items'))
+            setUserInfo(items)
+            setShowResIng(false)
+            await window.location.reload();
             redirect('/Home')
         }else{
             setShowMsg(true)
@@ -51,7 +77,6 @@ const ResIng = () => {
                 mail:e.target.elements.mail.value,
                 password:e.target.elements.password.value,
                 confirmPassword:e.target.elements.confirmPassword.value,
-                country:e.target.elements.country.value,
                 rol: isChecked ? 1 : 0
             }
             signUpRequest(signUpData);
@@ -97,7 +122,17 @@ const ResIng = () => {
                    <h3 className="text-2xl mb-4">Crea tu cuenta</h3>
                </div>
                <div className="flex items-center justify-between mb-4">
-                   <button style={{border: '1px solid gray'}} className="flex items-center mx-3 text-slate-400 p-3 rounded-lg text-sm"><img src={googlePng.src} alt="" className="mr-3"></img>Registrate con Google</button>
+               <GoogleLogin
+                    onSuccess={(credentialResponse) => {
+                        const credentialResponseDecoded = jwtDecode(credentialResponse.credential)
+                        console.log(credentialResponseDecoded)
+                        loginWithGoogle(credentialResponseDecoded.email, credentialResponseDecoded.email_verified, credentialResponseDecoded.name)
+                    }}
+                    onError={() => {
+                        console.log('Login Failed');
+                    }}
+                    />;
+                   {/*<button style={{border: '1px solid gray'}} className="flex items-center mx-3 text-slate-400 p-3 rounded-lg text-sm"><img src={googlePng.src} alt="" className="mr-3"></img>Registrate con Google</button>*/}
                    <button style={{border: '1px solid gray'}} className="flex items-center mx-3 text-slate-400 p-3 rounded-lg text-sm"><img src={applePng.src} alt="" className="mr-3"></img>Registrate con Apple</button>
                </div>
                <div className="text-center">
@@ -122,10 +157,6 @@ const ResIng = () => {
                <div className="form-group w-full mt-5 mb-5">
                    <label className="text-white">Repetir Contraseña</label>
                    <input type="password" placeholder="Escribe tu contraseña nuevamente" className="bg-slate-700 p-2 rounded-lg w-full" name="confirmPassword"></input>
-               </div>
-               <div className="form-group w-full mt-5 mb-5">
-                   <label className="text-white">Pais</label>
-                   <input type="text" placeholder="Ej: Argentina" className="bg-slate-700 p-2 rounded-lg w-full" name="country"></input>
                </div>
                <div className="form-group flex w-auto mt-7 mb-5">
                    <label className="text-white underline">¿Eres productor de eventos?</label>

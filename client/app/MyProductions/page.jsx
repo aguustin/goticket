@@ -2,8 +2,9 @@
 import { useContext, useEffect, useState } from "react"
 import AppContext from "../context/appContext"
 import Link from "next/link"
-import { getCreatedEventsRequest } from "../api/eventApi"
+import { deleteEventRequest, getCreatedEventsRequest } from "../api/eventApi"
 import peopleBlackPng from "@/app/assets/peopleBlack.png"
+import { redirect } from 'next/navigation'
 
 const MyProductions = () => {
     
@@ -20,7 +21,18 @@ const MyProductions = () => {
     console.log(myEventState)
 
     const deleteEvent = async (userId, eventId) => {
+        const data = {
+            userId:userId, 
+            eventId:eventId
+        }
 
+        const res = await deleteEventRequest(data)
+
+        if(res.data){
+            redirect('/MyProductions')
+        }else{
+            console.log("Hubo un problema al borrar el evento")
+        }
     }
 
     return(

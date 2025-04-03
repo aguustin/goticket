@@ -18,7 +18,7 @@ const NavBar = () => {
         setShowResIng(true)
         setSignInForm(true)
     }
-
+    console.log("SESSION: ", userInfo)
     return(
         <>
             <nav className="navbar fixed w-full flex items-center top-0 bg-slate-800">
@@ -30,7 +30,7 @@ const NavBar = () => {
                 </div>
                 :
                 <div className='nav-div-buttons absolute right-10 flex items-center'>
-                    <p>Hola {userInfo?.name} {userInfo?.lastname}</p>
+                    <p>Hola {userInfo?.name}</p>
                 </div>
                 }   
             </nav>
