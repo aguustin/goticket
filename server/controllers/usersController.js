@@ -103,7 +103,7 @@ export const buyTicketController = async (req, res) => {
             [`elem${index}._id`]: ticket._id,  // Use a unique field name for each filter
           }));
         const setFields = tickets.reduce((acc, ticket, index) => {
-            acc[`ticket.$[elem${index}].sellsByCat`] = ticket.sellsByCat;
+            acc[`ticket.$[elem${index}].sellsByCat`] = (acc[`ticket.$[elem${index}].sellsByCat`] || 0) + ticket.sellsByCat;
             return acc;
         }, {});
         

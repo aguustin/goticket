@@ -134,7 +134,7 @@ return(
                         <label className="text-xl">Fecha:</label><br></br>
                         <div className="flex items-center">
                             <input className="rounded-lg bg-slate-950 p-1" type="date" name="eventDate" value={evS.eventDate ? new Date(parseInt(evS.eventDate)).toISOString().split('T')[0] : ''} onChange={(e) => handleChange(evS._id, 'eventDate', new Date(e.target.value).getTime())}></input>
-                            <p className="ml-3">Fecha actual: {evS.eventDate} </p>
+                            <p className="ml-3">Fecha actual: {evS.eventDate ? new Date(parseInt(evS.eventDate)).toISOString().split('T')[0] : ''} </p>
                         </div>
                     </div><br></br>
                     <div className='flex items-center'>

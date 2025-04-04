@@ -13,6 +13,7 @@ import { useContext, useState } from 'react'
 import Link from 'next/link'
 import UserContext from '@/app/context/appContext'
 import { redirect } from 'next/navigation'
+import piechartPng from '@/app/assets/piechart.png'
 
 const SideBar = () => {
 
@@ -45,14 +46,14 @@ const SideBar = () => {
                         <img className='ml-2' src={myEventsPng.src} alt=""></img>
                         <p className='ml-3'>Mis producciones</p>
                     </Link>
-                    <button onClick={() => setOpenCategoryNav(!openCategoryNav)} className='flex items-center text-center pt-6 pb-6 border-b-2 w-full'>
+                    {/*<button onClick={() => setOpenCategoryNav(!openCategoryNav)} className='flex items-center text-center pt-6 pb-6 border-b-2 w-full'>
                         <img className='ml-2' src={categoryPng.src} alt=""></img>
                         <div className='flex items-center'>
                             <p className='ml-3'>Categorias</p>
                             <img className='absolute right-4' src={openCategoryNav ? upArrowPng.src : downArrowPng.src} alt=""></img> 
                         </div>
                     </button>
-                    {openCategoryNav && <div className='w-full ml-3'>
+                    {/*openCategoryNav && <div className='w-full ml-3'>
                         <Link href="/Events" className='sub-sidenav-categories flex items-center text-center pt-4 pb-4 border-b-2 w-full'>
                             <img className='ml-9' src={myEventsPng.src} alt=""></img>
                             <p className='ml-3'>Musica</p>
@@ -65,14 +66,18 @@ const SideBar = () => {
                             <img className='ml-9' src={myEventsPng.src} alt=""></img>
                             <p className='ml-3'>Musica</p>
                         </Link>
-                    </div>}
+                    </div>*/}
                     <button className='flex items-center text-center pt-6 pb-6 border-b-2 w-full'>
                         <img className='ml-2' src={favoritePng.src} alt=""></img>
                         <p className='ml-3'>Favoritos</p>
                     </button>
-                    {userInfo.rol === 1 && <Link href="/Producer" className='flex items-center text-center pt-6 pb-6 border-b-2 w-full'>
+                    {userInfo.rol === 2 && <Link href="/Producer" className='flex items-center text-center pt-6 pb-6 border-b-2 w-full'>
                         <img className='ml-2' src={addPng.src} alt=""></img>
                         <p className='ml-3'>Crear evento</p>
+                    </Link>}
+                    {userInfo.rol === 2 && <Link href="/Stadistics"  className='flex items-center text-center pt-6 pb-6 border-b-2 w-full'> 
+                        <img className='ml-2' src={piechartPng.src} alt=""></img>
+                        <p className='ml-3'>Estadisticas</p>
                     </Link>}
                 </div>
                 {userInfo.rol > 0 && <button onClick={() => logout()}  className='logout-button w-full absolute bottom-0 justify-between flex items-center text-center pt-6 pb-6 pr-10 bg-slate-800'>

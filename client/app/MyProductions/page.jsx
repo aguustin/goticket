@@ -17,7 +17,7 @@ const MyProductions = () => {
              setMyEventState(res.data)
         }
         getMyEvents()
-    },[])
+    },[userInfo._id])
     console.log(myEventState)
 
     const deleteEvent = async (userId, eventId) => {

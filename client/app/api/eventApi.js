@@ -14,4 +14,6 @@ export const updateMyEventRequest = (eventData) => axios.post('http://localhost:
     }
 })
 
+export const getMyCreatedEventsRequest = (userId) => axios.get(`http://localhost:4000/getMyCreatedEvents/${userId}`)
+
 export const deleteEventRequest = (data) => axios.post('http://localhost:4000/deleteEvent', data)

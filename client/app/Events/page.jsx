@@ -7,15 +7,32 @@ import peoplePng from "@/app/assets/people.png"
 import AppContext from "../context/appContext"
 import { useParams } from "next/navigation"
 import starSvg from "@/app/assets/star.svg"
+import { addFavoriteRequest } from "../api/userApi"
 
 export default function Events() {
     const params = useParams()
     const {eventsInfo, userInfo} = useContext(AppContext)
     const [search, setSearch] = useState('')
     console.log(params)
-      return (
+
+    const addFavorite = async (e, userId, eventId) => {
+        e.preventDefault()
+        if(userId.length > 0){
+            console.log(userId, ' ', eventId)
+            const data = {
+                userId: userId,
+                eventId: eventId
+            }
+            const res = await addFavoriteRequest(data)
+            console.log(res.data)
+        }else{
+            console.log("necesitas ingresar")
+        }
+    }
+    
+    return(
         <>
-            <div className="events relative p-9 mt-[70px] flex flex-wrap bg-slate-900 w-screen h-screen">
+            <div className="events relative p-9 pt-20 flex flex-wrap bg-slate-900 w-screen h-screen">
                 <form className="fixed right-10">
                     <input className="p-3 rounded-lg bg-slate-950" type="text" placeholder="Buscar evento" onChange={(e) =>setSearch(e.target.value)}></input>
                 </form>
@@ -24,15 +41,26 @@ export default function Events() {
                     ? ef 
                     : ef.eventName.toLowerCase().includes(search)
                 }).map((ei) => 
-                    <div key={ei._id} className="mx-auto mb-6">
+                    <div key={ei._id} className="mx-auto mb-6" style={{width: '350px', height:'595px'}}>
                     <Link href={`/Events/${userInfo?._id}/${ei._id}`} className="event-card mx-auto m-3 max-w-sm bg-white rounded-lg">
                         <img className="object-fill rounded-t-lg h-[350px] w-[350px]" src={ei.eventImg} alt=""/>
                         <div className="pt-5 pb-5 bg-slate-950 w-full">
                             <div className="flex items-center justify-between">
                                 <h5 className="mb-2 ml-3 mr-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{ei.eventName}</h5>
+                                <button onClick={(e) => addFavorite(e, userInfo?._id, ei._id)}>
+                                    <svg height="30px" width="30px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 47.94 47.94" xmlSpace="preserve" fill="#000000" style={{marginRight:'33px'}}>
+
+                                        <g id="SVGRepo_bgCarrier" strokeWidth="0"/>
+
+                                        <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"/>
+
+                                        <g id="SVGRepo_iconCarrier"> <path style={{fill:'#eab308'}} d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757 c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042 c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685 c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528 c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956 C22.602,0.567,25.338,0.567,26.285,2.486z"/> </g>
+
+                                    </svg>
+                                </button>
                             </div>
                             <p className="mb-3 ml-3 mr-3 font-normal text-gray-700 dark:text-gray-400">Adress: {ei.eventAdress}</p> 
-                            <p className="mb-3 ml-3 mr-3">Fecha: {ei.eventDate}</p>
+                            <p className="mb-3 ml-3 mr-3">Fecha: {ei.eventDate ? new Date(parseInt(ei.eventDate)).toISOString().split('T')[0] : ''}</p>
                             <div className="flex items-center justify-between ml-3 mr-3">
                                 <button href="#" className="inline-flex mt-6 items-center px-3 py-2 text-sm font-medium text-center text-black text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-yellow-500 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                     Ver evento

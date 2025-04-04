@@ -105,6 +105,7 @@ export const getMyCreatedEventsController = async (req, res) => {
     const {userId} = req.params
     console.log(userId)
     const getEvents = await eventsModel.find({organizationId: userId})
+    console.log(getEvents)
     res.send(getEvents)
 }
 
