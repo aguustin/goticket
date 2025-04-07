@@ -12,6 +12,7 @@ const eventSchema = mongoose.Schema({
     qrGeneration:{type:String},
 	sells:{type:Number},
 	profits:{type:Number},
+	serviceCost:{type:Number},
 	ticket:[{
 		price:{type:String},
 		category:{type:String},
@@ -19,6 +20,10 @@ const eventSchema = mongoose.Schema({
 		waiting:{type:Number},
 		sellsByCat:{type:Number},
 		visible:{type:String}
+	}],
+	helpers:[{
+		email:{type:String},
+		rolhelper:{type: Number}
 	}],
 	review:[{
 		userImg:{type:String},

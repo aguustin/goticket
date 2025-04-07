@@ -49,7 +49,8 @@ export const createEventController = async (req, res) => {
                         eventDescription: eventDescription,
                         eventDate: Date.now(),
                         sells: 0,
-                        profits: 0
+                        profits: 0,
+                        serviceCost: 5
                         /*ticket: [{
                             /*price:price,
                             category:category,

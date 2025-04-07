@@ -88,7 +88,7 @@ export const getMyFavoritesController = async (req, res) => {
 }
 
 export const buyTicketController = async (req, res) => {
-    const { userId, eventBuyedId,  status, tickets, cost, totalSelled, extractBuyedInfo } = req.body
+    const { userId, eventBuyedId,  status, tickets, cost, serviceCost, totalSelled, extractBuyedInfo } = req.body
 
     //console.log(req.body)
 
@@ -130,8 +130,9 @@ export const buyTicketController = async (req, res) => {
                 { _id: eventBuyedId },  // Match the event by its ID
                 {
                     $inc: {
-                    sells: totalSelled,  // Increment total sells
-                    profits: cost,       // Increment total profits
+                        sells: totalSelled,  // Increment total sells
+                        profits: cost,       // Increment total profits
+                        serviceCost: serviceCost
                     },
                     $set: setFields
                 },

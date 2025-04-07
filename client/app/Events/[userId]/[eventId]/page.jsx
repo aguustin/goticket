@@ -13,7 +13,9 @@ const Ev = () => {
     const [sellsByCat, setSellsByCat] = useState(0)
     const [totalSelled, setTotalSelled] = useState(0)
     const [total, setTotal] = useState(0)
+    const [serviceCost, setServiceCost] = useState(0)
     console.log(params)
+
     useEffect(() => {
         const getEvent = async () => {
             const res = await getSelectedEventRequest(params.eventId)
@@ -40,8 +42,9 @@ const Ev = () => {
         }
     }*/
 
+
     
-        const updateEventTicket = (ticketId, action, categorySells) => {
+        const updateEventTicket =(ticketId, action, categorySells) => {
             if(action === "minus"){
                 setEventSelected((prevEventSelected) => 
                     prevEventSelected.map((eventS) => {
@@ -62,6 +65,7 @@ const Ev = () => {
                                 setTotalSelled(totalSelled - 1)
                                 const priceToNum = Number(et.price)
                                 setTotal(total - priceToNum)
+        
                                 return {
                                   ...et,  // Spread the ticket object to keep the other properties intact
                                   waiting: et.waiting - 1,  // Update the quantity
@@ -88,10 +92,13 @@ const Ev = () => {
                                     setTotalSelled(totalSelled + 1)
                                     const priceToNum = Number(et.price)
                                     setTotal(total + priceToNum)
+                                    const serviceToNum = Number(total * 5 / 100)
+                                    setServiceCost(serviceToNum)
                                     return {
                                         ...et,  // Spread the ticket object to keep the other properties intact
                                         waiting: et.waiting + 1,  // Update the quantity
-                                        sellsByCat: et.sellsByCat + categorySellsToNum
+                                        sellsByCat: et.sellsByCat + categorySellsToNum,
+                            
                                     };
                                 }else{
                                     return {
@@ -107,12 +114,18 @@ const Ev = () => {
                       };
                     })
                 );
-    
+                
                console.log("eee: ", eventSelected)
-               
+               console.log("Service cost updated:", serviceCost);
                 //mandar el id del ticket para agregar la cantidad a waiting (todavia no comprado)
             }
         }
+        useEffect(() => {
+            if (total > 0) {
+                const serviceToNum = (total * 5) / 100;
+                setServiceCost(serviceToNum); // Calculate and set service cost based on the updated `total`
+            }
+        }, [total]);
         //console.log(sellsByCat)
 
     const buyTicket = async (eventBuyedId) => {
@@ -127,6 +140,7 @@ const Ev = () => {
             status: 1,
             tickets: eventSelected[0].ticket,
             cost: Number(total),
+            serviceCost: serviceCost,
             totalSelled: totalSelled,
             extractBuyedInfo: extractBuyedInfo
         }
@@ -171,6 +185,7 @@ const Ev = () => {
                         <p>Total: {total}</p>
                         <p>Tickets en el carrito: {totalSelled} </p>
                     </div>
+                    <p>El costo del servicio es el 5% del valor total de las entradas: {serviceCost}</p>
                 </div>
             </div>)}
         </>
