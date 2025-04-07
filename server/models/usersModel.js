@@ -25,6 +25,10 @@ const userSchema = mongoose.Schema({
     }],
     createdEvents:[{
         eventId: {type:String}
+    }],
+    eventHelper:[{
+        eventId:{type:String},
+        qrticketsToSell:{type:String}
     }]
 })
 

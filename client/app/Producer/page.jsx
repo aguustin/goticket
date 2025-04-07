@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import './producer.css';
 import imageUploadPng from '@/app/assets/imageUpload.png';
 import addTicketPng from '@/app/assets/addTicket.png';
-import { createEventRequest } from '../api/eventApi';
+import { addHelperRequest, createEventRequest } from '../api/eventApi';
 import AppContext from '../context/appContext';
 import Link from 'next/link';
 import { useRouter } from "next/navigation"
@@ -12,12 +12,16 @@ const Producer = () => {
 
     const {userInfo, myEventState} = useContext(AppContext)
     const [nuevoTicket, setNuevoTicker] = useState(1)
+    const [newHelper, setNewHelper] = useState(1)
+    const [ticketsFree, setTicketsFree] = useState(0)
+    const [email, setEmail] = useState('')
     const [price, setPrice] = useState(0)
     const [category, setCategory] = useState('')
     const [quantity, setQuantity] = useState(0)
     const [isCreated, setIsCreated] = useState(0)
     const [visible, setVisible] = useState()
     console.log('myEventState: ', myEventState)
+
     const newTicketFunc = async (e) => {
         e.preventDefault()
      
@@ -58,6 +62,14 @@ const Producer = () => {
             console.log('updateado')
         }else{
             setIsCreated(res.data)
+        }
+    }
+
+    const addHelper = async (e) => {
+        e.preventDefault()
+        const res = await addHelperRequest(userInfo.mail, ticketsFree, isCreated._id)  //meter qrFreeData
+        if(res.data === 2){
+            console.log('updateado')
         }
     }
       
@@ -115,6 +127,17 @@ const Producer = () => {
                                 </div>
                             ))}
                             <Link href="/MyEvents">Continuar</Link>                 
+                        </div>}
+                        {isCreated._id &&<div>
+                                <div className='mt-9'>
+                                    <div className='mt-2'>
+                                        <label>Cant. de entradas:</label>
+                                        <input className='rounded-lg ml-6 bg-slate-950 p-1 w-[250px]' type="number" name="ticketsFree" onChange={(e) => setTicketsFree(e.target.value)}></input>
+                                    </div>
+                                    <div className='relative'>
+                                        <button className='absolute right-10 bottom-0 bg-yellow-500 text-black p-1 text-xl rounded-lg' onClick={(e) => addHelper(e)}>Crear tickets de cortesia</button>
+                                    </div>
+                                </div>           
                         </div>}
                 </div>
             </div>

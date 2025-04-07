@@ -10,7 +10,6 @@ export const createEventController = async (req, res) => {
     if (req.file) {
         try {
             if(eventId && mongoose.Types.ObjectId.isValid(eventId)){  
-                console.log('entro aca?')
                 const passEveToId = new mongoose.Types.ObjectId(organizationId)
                 console.log(passEveToId)
                 await eventsModel.updateOne(
@@ -161,4 +160,33 @@ export const deleteEventController = async (req, res) => {
     }else{
         res.status(300).json(2)
     } 
+}
+
+export const addHelperController = async (req, res) => {
+    const {email, ticketsFree, eventId} = req.params
+
+    const findUser = await usersModel.find({mail: email})
+
+    if(findUser.length > 0){
+        await eventsModel.updateOne(
+            {_id: eventId},
+            {
+                $addToSet:{
+                    ticketsFree:[{
+                        email:email,
+                        quantity: ticketsFree,
+                        qrFreeData:{type:String}
+                    }]
+                }
+            }
+        )
+    }else{
+        console.log('funciona mal!!')
+    }
+  
+
+    res.status(200).json(2)
+
+
+
 }

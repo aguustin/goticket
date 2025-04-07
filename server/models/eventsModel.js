@@ -19,12 +19,18 @@ const eventSchema = mongoose.Schema({
 		quantity:{type:Number},
 		waiting:{type:Number},
 		sellsByCat:{type:Number},
-		visible:{type:String}
+		visible:{type:String},
 	}],
-	helpers:[{
+	ticketsFree:[{
 		email:{type:String},
-		rolhelper:{type: Number}
+		quantity: {type:Number},
+		qrFreeData:{type:String}
 	}],
+	/*helpers:[{
+		email:{type:String},
+		helperName:{type:String},
+		rolhelper:{type: Number},
+	}],*/
 	review:[{
 		userImg:{type:String},
 		name:{type:String},
