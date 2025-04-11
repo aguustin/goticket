@@ -20,17 +20,8 @@ const eventSchema = mongoose.Schema({
 		waiting:{type:Number},
 		sellsByCat:{type:Number},
 		visible:{type:String},
+		ticketsFree:{type:Number},
 	}],
-	ticketsFree:[{
-		email:{type:String},
-		quantity: {type:Number},
-		qrFreeData:{type:String}
-	}],
-	/*helpers:[{
-		email:{type:String},
-		helperName:{type:String},
-		rolhelper:{type: Number},
-	}],*/
 	review:[{
 		userImg:{type:String},
 		name:{type:String},
@@ -38,6 +29,11 @@ const eventSchema = mongoose.Schema({
 		note:{type:Number},
 		reviewDescription:{type:String}
 	}]
+	/*helpers:[{
+		email:{type:String},
+		helperName:{type:String},
+		rolhelper:{type: Number},
+	}],*/
 	//creo que la tabla para los pagos deberia ir aca (ya sea token o lo que sea que devuelvan las pasarelas de pago)
 })
 

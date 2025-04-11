@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addToFavoritesController, allUsersController, borrarUnUsuariocontroller, buyTicketController, getMyFavoritesController, signInController, signUpController } from "../controllers/usersController.js";
+import { addToFavoritesController, allUsersController, borrarUnUsuariocontroller, buyTicketController, getListController, getMyFavoritesController, sendEmailController, signInController, signUpController } from "../controllers/usersController.js";
 
 const route = Router()
 
@@ -13,8 +13,12 @@ route.post('/addFavorite', addToFavoritesController)
 
 route.get('/getFavorites/:userId', getMyFavoritesController)
 
+route.get('/getList/:userId', getListController)
+
 route.post('/buyTicket', buyTicketController)
 
 route.post('/deleteUser', borrarUnUsuariocontroller)
+
+route.post('/sendEmail', sendEmailController)
 
 export default route

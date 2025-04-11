@@ -1,6 +1,6 @@
 "use client"
 import './updateEvent.css'
-import { getSelectedEventRequest, updateMyEventRequest } from "@/app/api/eventApi"
+import { freeTicketDataRequest, getSelectedEventRequest, updateMyEventRequest } from "@/app/api/eventApi"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import updatePng from '@/app/assets/update.png'
@@ -12,8 +12,11 @@ const UpdateEvent = () => {
     const [newTicketState, setNewTicketState] = useState(0)
     const [price, setPrice] = useState(0)
     const [category, setCategory] = useState('')
+    const [sendCategory, setSendCategory] = useState()
     const [quantity, setQuantity] = useState(0)
     const [visible, setVisible] = useState()
+    const [email, setEmail] = useState('')
+    const [freeQuantity, setFreeQuantity] = useState(0)
     const [disableAdd, setDisableAdd] = useState(false)
     let i = 0
     
@@ -23,8 +26,8 @@ const UpdateEvent = () => {
                 setEventSelected(res.data)
             }
             getEvent()
+            
     },[])
-    console.log('event: ', eventSelected)
 
     const newTicket = (e) => {
         e.preventDefault()
@@ -85,7 +88,6 @@ const UpdateEvent = () => {
         } catch (error) {
             console.error(error);
         }
-
     }
 
     const handleChange = (id, field, value) => {
@@ -107,10 +109,26 @@ const UpdateEvent = () => {
         );
     };
 
+    const sendFreeTickets = async (e) => {
+        e.preventDefault()
+        
+        const freeTicketData = {
+            eventId: eventSelected[0]?._id,
+            mail:email,
+            eventName: eventSelected[0]?.eventName,
+            category:sendCategory,
+            freeQuantity:freeQuantity
+        }
+
+        setFreeQuantity(0)
+        const res = await freeTicketDataRequest(freeTicketData)
+    }
+    
+
 return(
     <>
         <div className="bg-slate-900 p-9 w-screen">
-            <form encType="multipart/form-data" className="tickets-form mx-auto mt-16 w-[700px] max-h-[800px] pr-3" onSubmit={(e) => updateEventFunc(e)}>
+            <form encType="multipart/form-data" className="tickets-form mx-auto mt-16 max-w-[1000px] max-h-[800px] pr-3" onSubmit={(e) => updateEventFunc(e)}>
                 <div className="flex justify-between">
                     {eventSelected.map((evS) =>
                     <div key={evS._id}>
@@ -136,7 +154,24 @@ return(
                             <input className="rounded-lg bg-slate-950 p-1" type="date" name="eventDate" value={evS.eventDate ? new Date(parseInt(evS.eventDate)).toISOString().split('T')[0] : ''} onChange={(e) => handleChange(evS._id, 'eventDate', new Date(e.target.value).getTime())}></input>
                             <p className="ml-3">Fecha actual: {evS.eventDate ? new Date(parseInt(evS.eventDate)).toISOString().split('T')[0] : ''} </p>
                         </div>
-                    </div><br></br>
+                    </div>
+                    <p>Tickets de cortesia:</p>
+                    <div>
+                        <div>
+                            <div>
+                                <select value={sendCategory} onChange={(e) => setSendCategory(e.target.value)}>
+                                    {evS.ticket.map((cat) => 
+                                        <option value={cat.category}>{cat.category}</option>
+                                    )}
+                                </select>
+                                <input className="rounded-lg bg-slate-950 p-1 w-[370px]" type='number' placeholder='Cantidad de tickets' name="freeQuantity" value={freeQuantity} onChange={(e) => setFreeQuantity(e.target.value)}></input><br></br>
+                                <label>Enviar a:</label>
+                                <input className="rounded-lg bg-slate-950 p-1 w-[370px]" placeholder='Email' name="sendToEmail" onChange={(e) => setEmail(e.target.value)}></input><br></br>
+                                <button onClick={(e) => sendFreeTickets(e)}>Enviar tickets</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br></br>
                     <div className='flex items-center'>
                         <button className='bottom-0 mt-6 bg-yellow-500 text-black p-2 text-xl rounded-lg mr-3' disabled={disableAdd ? true : false} onClick={(e) => newTicket(e)}>Agregar Tickets</button>
                         {disableAdd && <button className='bottom-0 mt-6 bg-yellow-500 text-black p-2 text-xl rounded-lg mr-3' onClick={(e) => updateTicketsFunc(e)}>Actualizar Tickets</button> }

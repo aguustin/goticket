@@ -147,7 +147,6 @@ const Ev = () => {
         console.log("buyData: ", buyData)
         await buyTicketRequest(buyData)
     }
-    
 
     return(
         <>

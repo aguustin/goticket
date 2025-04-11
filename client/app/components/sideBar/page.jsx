@@ -46,6 +46,10 @@ const SideBar = () => {
                         <img className='ml-2' src={myEventsPng.src} alt=""></img>
                         <p className='ml-3'>Mis producciones</p>
                     </Link>
+                    <Link href="/Cooperador" className='flex items-center text-center pt-6 pb-6 border-b-2 w-full'>
+                        <img className='ml-2' src={myEventsPng.src} alt=""></img>
+                        <p className='ml-3'>Cooperante de produccion</p>
+                    </Link>
                     {/*<button onClick={() => setOpenCategoryNav(!openCategoryNav)} className='flex items-center text-center pt-6 pb-6 border-b-2 w-full'>
                         <img className='ml-2' src={categoryPng.src} alt=""></img>
                         <div className='flex items-center'>

@@ -4,9 +4,10 @@ import eventsModel from "../models/eventsModel.js"
 import usersModel from "../models/usersModel.js";
 
 export const createEventController = async (req, res) => {
-    const { eventId, organizationId, eventName, eventAdress, eventCategory, eventDescription, price, category, quantity, visible } = req.body;
+    const { eventId, organizationId, eventName, eventAdress, eventCategory, eventDescription, price, category, quantity, visible, ticketsFree } = req.body;
     console.log(req.body)
     console.log(req.file)
+
     if (req.file) {
         try {
             if(eventId && mongoose.Types.ObjectId.isValid(eventId)){  
@@ -22,7 +23,8 @@ export const createEventController = async (req, res) => {
                                 quantity: quantity,
                                 waiting:0,
 		                        sellsByCat:0,
-                                visible: visible
+                                visible: visible,
+                                ticketsFree: ticketsFree
                             }]
                         }
                     }
@@ -162,7 +164,7 @@ export const deleteEventController = async (req, res) => {
     } 
 }
 
-export const addHelperController = async (req, res) => {
+export const addFreeTicketsController = async (req, res) => {
     const {email, ticketsFree, eventId} = req.params
 
     const findUser = await usersModel.find({mail: email})
@@ -186,7 +188,89 @@ export const addHelperController = async (req, res) => {
   
 
     res.status(200).json(2)
-
-
-
 }
+
+export const sendFreeTicketController = async (req, res) => {
+    const { eventId, mail, eventName, category, freeQuantity } = req.body;
+  
+    const user = await usersModel.findOne({ mail });
+
+    const event = await eventsModel.findOne({_id: eventId})
+  
+    if (!user) return res.status(404).json({ error: 'User not found' });
+  
+    const eventIndex = user.eventHelper.findIndex(e => e.eventId === eventId);
+  
+    if (eventIndex !== -1) {
+      const ticketIndex = user.eventHelper[eventIndex].ticketsToSend.findIndex(
+        t => t.category === category
+      );
+  
+      if (ticketIndex !== -1) {
+        // ✅ Increment existing freeQuantity
+        const path = `eventHelper.${eventIndex}.ticketsToSend.${ticketIndex}.freeQuantity`;
+  
+        await usersModel.updateOne(
+          { mail },
+          { $inc: { [path]: freeQuantity } }
+        );
+
+        const ticketIndexEV = event.ticket.findIndex(
+            t => t.category === category
+          );
+          console.log(ticketIndexEV)
+
+         const evpath = `ticket.${ticketIndexEV}.ticketsFree`;
+      
+          await eventsModel.updateOne(
+              { _id: eventId },
+              { 
+                  $inc: 
+                      { 
+                          [evpath]: - freeQuantity
+                      } 
+              }
+            );
+  
+        return res.status(200).json(3); // existing updated
+      } else {
+        // ➕ Add new category to existing event
+        const path = `eventHelper.${eventIndex}.ticketsToSend`;
+  
+        await usersModel.updateOne(
+          { mail },
+          {
+            $push: {
+              [path]: {
+                eventName: eventName,
+                category,
+                freeQuantity
+              }
+            }
+          }
+        );
+  
+        return res.status(200).json(4); // new category added
+      }
+    }
+  
+    // 📦 Add new event with category
+  /*  await usersModel.updateOne(
+      { mail },
+      {
+        $push: {
+          eventHelper: {
+            eventId,
+            ticketsToSend: [
+              {
+                category,
+                freeQuantity
+              }
+            ]
+          }
+        }
+      }
+    );
+  
+    res.status(200).json(2); // new event created*/
+  };

@@ -1,4 +1,5 @@
 "use client"
+import './myProductions.css'
 import { useContext, useEffect, useState } from "react"
 import AppContext from "../context/appContext"
 import Link from "next/link"
@@ -36,7 +37,7 @@ const MyProductions = () => {
     }
 
     return(
-        <div className="relative p-9 mt-[70px] flex flex-wrap bg-slate-900 w-screen h-screen">
+        <div className="myProductions relative p-9 mt-[70px] flex flex-wrap bg-slate-900 w-screen h-screen">
         {myEventState.map((ei) => 
             <div key={ei._id} className="mx-auto mb-6">
                     <div className="mx-auto m-3 max-w-sm bg-white rounded-lg">

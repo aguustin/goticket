@@ -15,7 +15,8 @@ const userSchema = mongoose.Schema({
         status:{type:Number},
         tickets:{type:Array},
         cost:{type:Number},
-        qrData:{type:String},
+        category:{type:String},
+        transactionId:{type:String},
     }],
     favorites:[{
         eventFavId:{type:String},
@@ -28,7 +29,11 @@ const userSchema = mongoose.Schema({
     }],
     eventHelper:[{
         eventId:{type:String},
-        qrticketsToSell:{type:String}
+        ticketsToSend:[{
+            eventName:{type:String},
+            category:{type:String},
+            freeQuantity:{type:Number},
+        }]
     }]
 })
 

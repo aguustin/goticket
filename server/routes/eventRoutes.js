@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addHelperController, createEventController, deleteEventController, getAllEventsController, getEventByCategoryController, getEventById, getMyCreatedEventsController, updateMyEventController } from "../controllers/eventsController.js";
+import { addFreeTicketsController, createEventController, deleteEventController, getAllEventsController, getEventByCategoryController, getEventById, getMyCreatedEventsController, sendFreeTicketController, updateMyEventController } from "../controllers/eventsController.js";
 import { upload } from "../middleware/multer.js";
 
 const route = Router()
@@ -18,6 +18,8 @@ route.post('/updateMyEvent', upload.single('eventImg'), updateMyEventController)
 
 route.post('/deleteEvent', deleteEventController)
 
-route.put('/addHelper/:email/:ticketsFree/:eventId', addHelperController) //meter qrFreeData
+route.post('/sendFreeTicket', sendFreeTicketController)
+
+//route.put('/addFreeTickets/:email/:ticketsFree/:eventId', addFreeTicketsController) //meter qrFreeData
 
 export default route

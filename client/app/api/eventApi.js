@@ -18,4 +18,6 @@ export const getMyCreatedEventsRequest = (userId) => axios.get(`http://localhost
 
 export const deleteEventRequest = (data) => axios.post('http://localhost:4000/deleteEvent', data)
 
-export const addHelperRequest = (email, ticketsFree, eventId) => axios.put(`http://localhost:4000/addHelper/${email}/${ticketsFree}/${eventId}`)
+export const freeTicketDataRequest = (freeTicketData) => axios.post('http://localhost:4000/sendFreeTicket', freeTicketData)
+
+//export const addFreeTicketsRequest = (email, ticketsFree, eventId) => axios.put(`http://localhost:4000/addFreeTickets/${email}/${ticketsFree}/${eventId}`)

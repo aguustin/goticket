@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`h-screen overflow-hidden ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`h-screen overflow-hidden ${geistSans.variable} ${geistMono.variable} antialiased bg-slate-900`}
       >
         <AppContextProvider>
         <GoogleOAuthProvider clientId="628337246968-cd0hpg1sjd74np8qt0ou5no62o8am4dc.apps.googleusercontent.com">

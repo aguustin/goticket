@@ -14,7 +14,6 @@ const Producer = () => {
     const [nuevoTicket, setNuevoTicker] = useState(1)
     const [newHelper, setNewHelper] = useState(1)
     const [ticketsFree, setTicketsFree] = useState(0)
-    const [email, setEmail] = useState('')
     const [price, setPrice] = useState(0)
     const [category, setCategory] = useState('')
     const [quantity, setQuantity] = useState(0)
@@ -47,7 +46,9 @@ const Producer = () => {
             eventData.append('category', category)
             eventData.append('quantity', quantity)
             eventData.append('visible', visible)
+            eventData.append('ticketsFree', ticketsFree)
             setNuevoTicker(nuevoTicket + 1)
+            setTicketsFree(0)
         }
         
         setPrice(0)
@@ -57,23 +58,26 @@ const Producer = () => {
 
         const res = await createEventRequest(eventData)
 
-        console.log(eventData);
+        console.log(res.data);
         if(res.data === 2){
-            console.log('updateado')
+            console.log(isCreated)
+            
         }else{
             setIsCreated(res.data)
         }
     }
 
-    const addHelper = async (e) => {
+    /*const sendFreeTickets = async (e, category) => {
         e.preventDefault()
-        const res = await addHelperRequest(userInfo.mail, ticketsFree, isCreated._id)  //meter qrFreeData
-        if(res.data === 2){
-            console.log('updateado')
+        const freeTicketData = {
+            eventId: isCreated._id,
+            mail:email,
+            category:category,
+            freeQuantity:e.target.elements.freeQuantity.value,
         }
-    }
+        const res = await freeTicketDataRequest(freeTicketData)
+    }*/
       
-
     return(
         <>
         <div className="bg-slate-900 p-9 w-screen">
@@ -82,6 +86,17 @@ const Producer = () => {
                 <div>
                     <label htmlFor="upload-file-event" className="custom-file-upload bg-slate-950"><img className='mx-auto' src={imageUploadPng.src}></img></label><br></br>
                     <input id="upload-file-event" type="file" name="eventImg" />
+                    {/*isCreated.ticket?.map((innerState) => 
+                    innerState.ticketsFree.length > 0 &&
+                    <div>
+                        <div>
+                            <p>Tickets de cortesia:</p>
+                            <input placeholder='Email' name="sendToEmail" onChange={(e) => setEmail(e.target.value)}></input>
+                            <input placeholder='Cantidad de tickets' name="freeQuantity"></input>
+                            <button onClick={(e) => sendFreeTickets(e, innerState.category)}>Enviar tickets</button>
+                        </div>
+                    </div>
+                    )*/}
                 </div>
                 <div>
                     <div>
@@ -118,6 +133,10 @@ const Producer = () => {
                                             <label>Cantidad:</label>
                                             <input className='rounded-lg ml-1 bg-slate-950 p-1 w-[150px]' type="number" onChange={(e) => setQuantity(e.target.value)}></input>
                                         </div>
+                                        <div className='mt-2'>
+                                            <label>Tickets de cortesia:</label>
+                                            <input className='rounded-lg ml-1 bg-slate-950 p-1 w-[150px]' type="number" onChange={(e) => setTicketsFree(e.target.value)}></input>
+                                        </div>
                                         <div className='flex items-center mt-2'>
                                             <label>Visible:</label>
                                             <input className='rounded-lg bg-slate-950 w-[30px]' type="checkbox" onChange={(e) => setVisible(e.target.value)}></input>
@@ -127,17 +146,6 @@ const Producer = () => {
                                 </div>
                             ))}
                             <Link href="/MyEvents">Continuar</Link>                 
-                        </div>}
-                        {isCreated._id &&<div>
-                                <div className='mt-9'>
-                                    <div className='mt-2'>
-                                        <label>Cant. de entradas:</label>
-                                        <input className='rounded-lg ml-6 bg-slate-950 p-1 w-[250px]' type="number" name="ticketsFree" onChange={(e) => setTicketsFree(e.target.value)}></input>
-                                    </div>
-                                    <div className='relative'>
-                                        <button className='absolute right-10 bottom-0 bg-yellow-500 text-black p-1 text-xl rounded-lg' onClick={(e) => addHelper(e)}>Crear tickets de cortesia</button>
-                                    </div>
-                                </div>           
                         </div>}
                 </div>
             </div>
